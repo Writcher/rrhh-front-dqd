@@ -2,7 +2,7 @@ import { TextField } from "@mui/material";
 import { Control, Controller } from "react-hook-form";
 import { LoginFormData } from "../types/loginFormData";
 
-export default function LoginFormInputs({ control }: { control: Control<LoginFormData, any, LoginFormData> }) {
+export default function LoginFormInputs({ control }: { control: Control<LoginFormData> }) {
     return (
         <div className='flex flex-col w-full gap-3 sm:gap-4'>
             <Controller

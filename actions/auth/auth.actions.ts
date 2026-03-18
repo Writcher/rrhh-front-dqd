@@ -49,5 +49,5 @@ export async function logIn({
 };
 
 export async function doLogout() {
-    await signOut({ redirectTo: '/inicio' });
+    await signOut({ redirectTo: '/' });
 };
