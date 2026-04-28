@@ -1,6 +1,7 @@
 import { TablePagination } from "@mui/material";
 
 export default function TableWrapper({
+    paginated = true,
     isLoading,
     page,
     limit,
@@ -9,26 +10,27 @@ export default function TableWrapper({
     total,
     children
 }: {
-    isLoading: boolean,
-    page: number,
-    limit: number,
-    handlePageChange: (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number) => void,
-    handleLimitChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => void,
-    total: number,
+    paginated?: boolean,
+    isLoading?: boolean,
+    page?: number,
+    limit?: number,
+    handlePageChange?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number) => void,
+    handleLimitChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => void,
+    total?: number,
     children?: React.ReactNode
 }) {
     return (
         <div className='flex flex-col flex-1 w-full min-h-0 rounded border-2 border-orange-500 overflow-hidden'>
             {children}
-            {(isLoading || (total ?? 0) > 0) &&
+            {paginated && (isLoading || (total ?? 0) > 0) &&
                 <div className='flex shrink-0 justify-end items-center border-t-2 border-orange-500'>
                     <TablePagination
                         rowsPerPageOptions={[25, 50, 75, 100]}
                         component='div'
                         count={total ?? 0}
-                        rowsPerPage={limit}
-                        page={page}
-                        onPageChange={handlePageChange}
+                        rowsPerPage={limit ?? 25}
+                        page={page ?? 0}
+                        onPageChange={handlePageChange!}
                         onRowsPerPageChange={handleLimitChange}
                         labelRowsPerPage='Filas por Página: '
                         labelDisplayedRows={({ from, to, count }) =>

@@ -19,8 +19,8 @@ import { InicioStats } from './components/inicioStats';
 export default function AdministrativoInicio({ proyecto }: { proyecto: number }) {
     //hooks
     const { showWarning } = useSnackbar();
-    const pagination = usePagination({ limit: 25 });
     const tab = useTabs({ tab: 'ausentes' });
+    const pagination = usePagination({ limit: 25, resetKey: tab.tab });
     //query
     const asistencia = useQuery({
         queryKey: ['getAsistenciaInicio', pagination.page, pagination.limit],
@@ -44,10 +44,7 @@ export default function AdministrativoInicio({ proyecto }: { proyecto: number })
             {/** Tabla */}
             <div className='flex flex-col lg:flex-2 flex-1 gap-2 overflow-hidden'>
                 <TableTabs
-                    handleTabChange={(newTab: string) => {
-                        tab.handleTabChange(null, newTab);
-                        pagination.handlePageChange(null, 0);
-                    }}
+                    handleTabChange={(newTab: string) => tab.handleTabChange(null, newTab)}
                     activeTab={tab.tab}
                     tabs={[
                         { label: 'Presentes', value: 'presentes' },

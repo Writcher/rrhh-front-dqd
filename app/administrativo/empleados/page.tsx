@@ -9,7 +9,7 @@ export default async function AdministrativoEmpleadosPage() {
 
     return (
         <PageWrapper title='Empleados'>
-            <Empleados esAdministrativo={session?.user?.tipoUsuario === 'Administrativo'}/>
+            <Empleados isAdministrativo={session?.user?.tipoUsuario === 'Administrativo'}/>
         </PageWrapper>
     );
 };

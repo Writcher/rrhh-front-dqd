@@ -105,7 +105,7 @@ export function FilterBar({
     filtersHook,
     items,
     actions,
-    showClean = true,
+    showClean = false,
     showMenu = true
 }: {
     filtersHook: FiltersHook
@@ -144,11 +144,9 @@ export function FilterBar({
                         >
                             Filtros
                         </Button>
-                        {showClean && (
-                            <Button variant='contained' color='error' disableElevation onClick={handleCleanFilters}>
-                                <FilterAltOffRoundedIcon />
-                            </Button>
-                        )}
+                        <Button variant='contained' color='error' disableElevation onClick={handleCleanFilters}>
+                            <FilterAltOffRoundedIcon />
+                        </Button>
                     </ButtonGroup>
                     <Menu anchorEl={anchor} open={openFilters} onClose={handleCloseFilters}>
                         {items.map(item => (
@@ -159,6 +157,17 @@ export function FilterBar({
                         ))}
                     </Menu>
                 </div>
+            )}
+            {showClean && (
+                <Button
+                    variant='contained'
+                    color='error'
+                    disableElevation
+                    className='!h-10'
+                    onClick={handleCleanFilters}
+                >
+                    <FilterAltOffRoundedIcon />
+                </Button>
             )}
             <div className='flex-1 min-w-[280px] max-w-2xl'>
                 <div className='flex items-center justify-start w-full gap-2 sm:gap-3'>

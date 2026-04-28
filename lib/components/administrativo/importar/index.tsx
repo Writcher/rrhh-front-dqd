@@ -76,9 +76,7 @@ export default function Importar() {
             });
             reset();
         },
-        onError: () => {
-            showError('Error al importar jornada');
-        }
+        onError: () => showError('Error al importar jornada')
     })
     //feedback
     useEffect(() => {

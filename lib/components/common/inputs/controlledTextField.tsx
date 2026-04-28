@@ -21,7 +21,9 @@ export function ControlledTextField<T extends FieldValues>({
     label,
     rules,
     disabled,
-    type
+    type,
+    multiline,
+    rows
 }: {
     control: Control<T>,
     name: Path<T>,
@@ -29,7 +31,9 @@ export function ControlledTextField<T extends FieldValues>({
     rules?: Omit<RegisterOptions<T, Path<T>>, 'disabled' | 'valueAsNumber' | 'valueAsDate' | 'setValueAs'>,
     isLoading?: boolean,
     disabled?: boolean,
-    type?: HTMLInputTypeAttribute
+    type?: HTMLInputTypeAttribute,
+    multiline?: boolean,
+    rows?: number
 }) {
     return (
         <Controller
@@ -46,6 +50,8 @@ export function ControlledTextField<T extends FieldValues>({
                     fullWidth
                     type={type}
                     disabled={disabled}
+                    multiline={multiline}
+                    rows={rows}
                     error={!!error}
                     helperText={error?.message}
                 />

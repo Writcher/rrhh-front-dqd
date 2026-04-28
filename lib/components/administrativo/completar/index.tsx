@@ -60,9 +60,7 @@ export default function Completar({
             });
             router.back();
         },
-        onError: () => {
-            showError('Error al marcar importación como completa')
-        }
+        onError: () => showError('Error al marcar importación como completa')
     });
     //const
     const disabled = jornadas.isLoading || Number(jornadas.data?.totalJornadas ?? 0) !== 0;

@@ -24,7 +24,7 @@ import { TableBase } from "../common/tables/tableBase";
 import { ImportacionItemDto } from "@/lib/types/importacion/get-importacion";
 import ImportacionesTableRow from "./components/importacionesTableRow";
 
-export default function Informes({ esAdministrativo }: { esAdministrativo?: boolean }) {
+export default function Informes({ isAdministrativo }: { isAdministrativo?: boolean }) {
     //hooks
     const { showWarning } = useSnackbar();
     const { setValue, watch } = useForm<ImportacionesTableFiltersFormData>({
@@ -35,13 +35,16 @@ export default function Informes({ esAdministrativo }: { esAdministrativo?: bool
             incompletas: false,
         }
     });
-    const pagination = usePagination({ limit: 25 });
     const filters = useFilters([
         { key: 'id_proyecto', type: 'select', defaultVisible: true },
         { key: 'id_mes', type: 'select' },
         { key: 'quincena', type: 'select' },
         { key: 'incompletas', type: 'toggle' }
     ], { setValue, watch }, { syncUrl: true });
+    const pagination = usePagination({
+        limit: 25,
+        resetKey: `${watch('id_proyecto')}-${watch('id_mes')}-${watch('quincena')}-${watch('incompletas')}`
+    });
     //query
     const proyectos = useQuery({
         queryKey: ['getProyectos'],
@@ -92,7 +95,7 @@ export default function Informes({ esAdministrativo }: { esAdministrativo?: bool
                 ]}
                 actions={
                     <>
-                        {esAdministrativo &&
+                        {isAdministrativo &&
                             <Button
                                 component={Link}
                                 href={'/administrativo/importaciones/importar'}
@@ -135,11 +138,11 @@ export default function Informes({ esAdministrativo }: { esAdministrativo?: bool
                         header={
                             <TableHeader
                                 titles={[
-                                    { title: 'Nombre', width: `${esAdministrativo ? '20%' : '25%'}`, alignment: 'left' },
-                                    { title: 'Proyecto', width: `${esAdministrativo ? '20%' : '25%'}`, alignment: 'center' },
-                                    { title: 'Usuario', width: `${esAdministrativo ? '20%' : '25%'}`, alignment: 'center' },
-                                    { title: 'Estado', width: `${esAdministrativo ? '20%' : '25%'}`, alignment: 'center' },
-                                    { title: 'Acciones', width: '20%', alignment: 'right', visible: esAdministrativo }
+                                    { title: 'Nombre', width: `${isAdministrativo ? '20%' : '25%'}`, alignment: 'left' },
+                                    { title: 'Proyecto', width: `${isAdministrativo ? '20%' : '25%'}`, alignment: 'center' },
+                                    { title: 'Usuario', width: `${isAdministrativo ? '20%' : '25%'}`, alignment: 'center' },
+                                    { title: 'Estado', width: `${isAdministrativo ? '20%' : '25%'}`, alignment: 'center' },
+                                    { title: 'Acciones', width: '20%', alignment: 'right', visible: isAdministrativo }
                                 ]}
                             />
                         }
@@ -147,11 +150,11 @@ export default function Informes({ esAdministrativo }: { esAdministrativo?: bool
                             <TableSkeleton
                                 rows={10}
                                 columns={[
-                                    { variant: 'text', alignment: 'left', colWidth: `${esAdministrativo ? '20%' : '25%'}`, width: 150 },
-                                    { variant: 'text', alignment: 'center', colWidth: `${esAdministrativo ? '20%' : '25%'}`, width: 100 },
-                                    { variant: 'text', alignment: 'center', colWidth: `${esAdministrativo ? '20%' : '25%'}`, width: 150 },
-                                    { variant: 'rectangular', alignment: 'center', colWidth: `${esAdministrativo ? '20%' : '25%'}`, width: 100 },
-                                    { variant: 'rectangular', alignment: 'right', colWidth: '20%', width: 120, visible: esAdministrativo }
+                                    { variant: 'text', alignment: 'left', colWidth: `${isAdministrativo ? '20%' : '25%'}`, width: 150 },
+                                    { variant: 'text', alignment: 'center', colWidth: `${isAdministrativo ? '20%' : '25%'}`, width: 100 },
+                                    { variant: 'text', alignment: 'center', colWidth: `${isAdministrativo ? '20%' : '25%'}`, width: 150 },
+                                    { variant: 'rectangular', alignment: 'center', colWidth: `${isAdministrativo ? '20%' : '25%'}`, width: 100 },
+                                    { variant: 'rectangular', alignment: 'right', colWidth: '20%', width: 120, visible: isAdministrativo }
                                 ]}
                             />
                         }
@@ -162,7 +165,7 @@ export default function Informes({ esAdministrativo }: { esAdministrativo?: bool
                                         <ImportacionesTableRow
                                             key={importacion.id}
                                             importacion={importacion}
-                                            esAdministrativo={esAdministrativo ?? false}
+                                            isAdministrativo={isAdministrativo ?? false}
                                         />
                                     ))}
                             </TableBody>

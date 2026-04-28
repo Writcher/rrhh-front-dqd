@@ -42,7 +42,7 @@ export function ControlledDatePicker<T extends FieldValues>({
                         className='!w-[100%]'
                         value={value ? dayjs(value, 'DD-MM-YYYY') : null}
                         onChange={(newValue) => {
-                            onChange(newValue ? newValue.format('DD-MM-YYYY') : '');
+                            onChange(newValue && newValue.isValid() ? newValue.format('DD-MM-YYYY') : '');
                         }}
                         format='DD-MM-YYYY'
                         slotProps={{

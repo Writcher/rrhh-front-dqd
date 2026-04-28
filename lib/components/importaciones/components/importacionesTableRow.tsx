@@ -1,6 +1,5 @@
 import { deleteImportacion } from "@/lib/actions/importacion/importacion.actions";
 import { useSnackbar } from "@/lib/contexts/snackbar";
-import { useConfirm } from "@/lib/hooks/useConfirm";
 import { ImportacionItemDto } from "@/lib/types/importacion/get-importacion";
 import { Box, Button, Chip, TableRow } from "@mui/material";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -9,20 +8,19 @@ import LightTooltip from "../../common/components/tooltip";
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import Link from "next/link";
-import SyncIcon from '@mui/icons-material/Sync';
+import { TableActionButton } from "@/lib/components/common/components/tableActionButton";
 
 export default function ImportacionesTableRow({
     importacion,
-    esAdministrativo
+    isAdministrativo
 }: {
     importacion: ImportacionItemDto,
-    esAdministrativo: boolean
+    isAdministrativo: boolean
 }) {
     //init
     const queryClient = useQueryClient();
     //hooks
     const { showSuccess, showError } = useSnackbar();
-    const confirm = useConfirm();
     //mutacion
     const remove = useMutation({
         mutationFn: (data: { id: number }) => deleteImportacion(data),
@@ -32,9 +30,7 @@ export default function ImportacionesTableRow({
                 queryKey: ['getImportaciones']
             });
         },
-        onError: () => {
-            showError('Error al eliminar importacion')
-        }
+        onError: () => showError('Error al eliminar importacion')
     });
     return (
         <TableRow>
@@ -47,7 +43,7 @@ export default function ImportacionesTableRow({
             <TableRowCell alignment='center'>
                 {importacion.nombreusuario}
             </TableRowCell>
-            <TableRowCell alignment={`${esAdministrativo ? 'center' : 'right'}`}>
+            <TableRowCell alignment={`${isAdministrativo ? 'center' : 'right'}`}>
                 <Chip
                     label={importacion.nombreestado}
                     className='!rounded'
@@ -56,10 +52,10 @@ export default function ImportacionesTableRow({
                     }
                 />
             </TableRowCell>
-            {esAdministrativo &&
+            {isAdministrativo &&
                 <TableRowCell alignment='right' variant='buttons'>
                     <Box sx={{ display: 'flex' }}>
-                        <LightTooltip title='Guardar' placement='left' arrow>
+                        <LightTooltip title='Revisar' placement='left' arrow>
                             <Button
                                 component={Link}
                                 href={`/administrativo/importacion/${importacion.id}/completar`}
@@ -67,26 +63,22 @@ export default function ImportacionesTableRow({
                                 color='success'
                                 disableElevation
                                 size='small'
-                                disabled={remove.isPending}
+                                disabled={remove.isPending || importacion.nombreestado.toLowerCase() === 'completa'}
                                 sx={{ borderRadius: '4px 0 0 4px' }}
                             >
                                 <EditNoteRoundedIcon />
                             </Button>
                         </LightTooltip>
-                        <LightTooltip title='Cancelar' placement='left' arrow>
-                            <Button
-                                variant={confirm.confirm ? 'contained': 'outlined'}
-                                color='error'
-                                disableElevation
-                                size='small'
-                                disabled={remove.isPending}
-                                onBlur={() => confirm.handleConfirm(false)}
-                                    onClick={confirm.confirm ? () => remove.mutate({ id: importacion.id }) : () => confirm.handleConfirm()}
-                                sx={{ borderRadius: '0 4px 4px 0' }}
-                            >
-                                {!remove.isPending ? <DeleteForeverRoundedIcon /> : <SyncIcon className='animate-spin' style={{ animationDirection: 'reverse' }} />}
-                            </Button>
-                        </LightTooltip>
+                        <TableActionButton
+                            tooltip='¿Borrar?'
+                            confirmTooltip='Confirmar'
+                            icon={<DeleteForeverRoundedIcon />}
+                            color='error'
+                            loading={remove.isPending}
+                            disabled={remove.isPending}
+                            onClick={() => remove.mutate({ id: importacion.id })}
+                            position='last'
+                        />
                     </Box>
                 </TableRowCell>
             }

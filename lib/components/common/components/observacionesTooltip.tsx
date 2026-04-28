@@ -21,7 +21,7 @@ export const ObservacionesTooltip = ({
                         <Typography variant='subtitle2' sx={{ mb: 1, fontWeight: 'bold' }}>
                             Observaciones:
                         </Typography>
-                        <div className='flex flex-col gap-4 '>
+                        <div className='flex flex-col gap-2 '>
                             {observaciones.map((observacion: {id: number, texto: string}, index: any) => (
                                 <div className='flex flex-row justify-between items-center gap-8' key={index}>
                                     <Typography

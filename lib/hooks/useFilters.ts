@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import { FieldValues, Path, UseFormSetValue, UseFormWatch } from "react-hook-form";
 import debounce from 'lodash.debounce';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
@@ -77,13 +77,19 @@ export const useFilters = <TForm extends FieldValues>(
         router.replace(`${pathname}${queryString ? `?${queryString}` : ''}`, { scroll: false });
     };
 
+    const updateUrlRef = useRef(updateUrl);
+    updateUrlRef.current = updateUrl;
+
     const openFilters = Boolean(anchor);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const debouncedSetters = useMemo(() => Object.fromEntries(
+    const debouncedCommits = useMemo(() => Object.fromEntries(
         fields
             .filter(field => field.type === 'debounced-text')
-            .map(field => [field.key, debounce((v: any) => setValue(field.key as Path<TForm>, v), field.debounceMs ?? 500)])
+            .map(field => [field.key, debounce((v: any, newActiveFilters: Record<string, any>) => {
+                setValue(field.key as Path<TForm>, v);
+                if (syncUrl) updateUrlRef.current(newActiveFilters);
+            }, field.debounceMs ?? 500)])
     ), []);
 
     const handleOpenFilters = (event: React.MouseEvent<HTMLButtonElement>) => setAnchor(event.currentTarget);
@@ -94,8 +100,15 @@ export const useFilters = <TForm extends FieldValues>(
 
         if (field.type === 'debounced-text') {
             if (field.normalKey) setValue(field.normalKey as Path<TForm>, value);
-            debouncedSetters[key](value);
-        } else if (field.type === 'toggle') {
+            const newActiveFilters = { ...activeFilters };
+            if (value) newActiveFilters[key] = value;
+            else delete newActiveFilters[key];
+            setActiveFilters(newActiveFilters);
+            debouncedCommits[key](value, newActiveFilters);
+            return;
+        }
+
+        if (field.type === 'toggle') {
             const current = watch?.(key as Path<TForm>);
             setValue(key as Path<TForm>, !current as any);
         } else {

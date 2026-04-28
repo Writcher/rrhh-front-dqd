@@ -34,12 +34,15 @@ export default function Asistencia() {
             fecha: ''
         }
     });
-    const pagination = usePagination({ limit: 25 });
     const tab = useTabs({ tab: 'ausentes' });
     const filters = useFilters([
         { key: 'id_proyecto', type: 'select' },
         { key: 'fecha', type: 'datepicker' }
     ], { setValue, watch }, { syncUrl: true });
+    const pagination = usePagination({
+        limit: 25,
+        resetKey: `${tab.tab}-${watch('id_proyecto')}-${watch('fecha')}`
+    });
     //query
     const proyectos = useQuery({
         queryKey: ['getProyectos'],
@@ -47,8 +50,19 @@ export default function Asistencia() {
         refetchOnWindowFocus: false
     });
     const asistencia = useQuery({
-        queryKey: ['getAsistencia', pagination.page, pagination.limit, watch('id_proyecto'), watch('fecha')],
-        queryFn: () => getAsistencia({ page: pagination.page, limit: pagination.limit, id_proyecto: watch('id_proyecto'), fecha: watch('fecha') }),
+        queryKey: [
+            'getAsistencia',
+            pagination.page,
+            pagination.limit, 
+            watch('id_proyecto'), 
+            watch('fecha')
+        ],
+        queryFn: () => getAsistencia({ 
+            page: pagination.page, 
+            limit: pagination.limit,
+            id_proyecto: watch('id_proyecto'), 
+            fecha: watch('fecha') 
+        }),
         enabled: !!watch('id_proyecto') && !!watch('fecha')
     });
     //utils
@@ -103,19 +117,17 @@ export default function Asistencia() {
                 showClean={false}
                 showMenu={false}
             />
+            {/** Tabs */}
+            <TableTabs
+                handleTabChange={(newTab: string) => tab.handleTabChange(null, newTab)}
+                activeTab={tab.tab}
+                tabs={[
+                    { label: 'Presentes', value: 'presentes' },
+                    { label: 'Ausentes', value: 'ausentes' }
+                ]}
+            />
             {/** Tabla */}
             <div className='flex flex-col lg:flex-2 flex-1 gap-2 overflow-hidden'>
-                <TableTabs
-                    handleTabChange={(newTab: string) => {
-                        tab.handleTabChange(null, newTab);
-                        pagination.handlePageChange(null, 0);
-                    }}
-                    activeTab={tab.tab}
-                    tabs={[
-                        { label: 'Presentes', value: 'presentes' },
-                        { label: 'Ausentes', value: 'ausentes' }
-                    ]}
-                />
                 <TableWrapper
                     isLoading={asistencia.isLoading}
                     page={pagination.page}

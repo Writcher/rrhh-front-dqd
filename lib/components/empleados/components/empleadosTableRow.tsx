@@ -1,22 +1,20 @@
 import { EmpleadoItemDto } from "@/lib/types/empleado/get-empleado";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { EmpleadosTableEditFormData } from "../types/empleadosTableEditFormData";
 import { useSnackbar } from "@/lib/contexts/snackbar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useConfirm } from "@/lib/hooks/useConfirm";
 import { useShow } from "@/lib/hooks/useShow";
 import { ModalidadValidacion } from "@/lib/types/modalidadValidacion/modalidadValidacion.entity";
 import { deactivateEmpleado, editEmpleado } from "@/lib/actions/empleado/empleado.actions";
-import { Box, Button, Chip, MenuItem, TableRow, TextField } from "@mui/material";
+import { Box, Chip, TableRow } from "@mui/material";
 import { TableRowCell } from "@/lib/components/common/tables/tableRowCell";
-import LightTooltip from "@/lib/components/common/components/tooltip";
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import SyncIcon from '@mui/icons-material/Sync';
 import PersonRemoveRoundedIcon from '@mui/icons-material/PersonRemoveRounded';
 import SaveAsRoundedIcon from '@mui/icons-material/SaveAsRounded';
 import { useEffect } from "react";
 import { ControlledSelect } from "../../common/inputs/controlledSelect";
+import { TableActionButton } from "@/lib/components/common/components/tableActionButton";
 
 export default function EmpleadosTableRow({
     empleado,
@@ -34,7 +32,6 @@ export default function EmpleadosTableRow({
             id_modalidadvalidacion: ''
         }
     });
-    const confirm = useConfirm();
     const show = useShow();
     //mutacion
     const edit = useMutation({
@@ -46,9 +43,7 @@ export default function EmpleadosTableRow({
                 queryKey: ['getEmpleados']
             });
         },
-        onError: () => {
-            showError('Error al editar empleado');
-        }
+        onError: () => showError('Error al editar empleado')
     });
     const deactivate = useMutation({
         mutationFn: (data: { id: number }) => deactivateEmpleado(data),
@@ -58,9 +53,7 @@ export default function EmpleadosTableRow({
                 queryKey: ['getEmpleados']
             });
         },
-        onError: () => {
-            showError('Error al dar de baja empleado');
-        }
+        onError: () => showError('Error al dar de baja empleado')
     });
     //effect
     useEffect(() => {
@@ -110,65 +103,49 @@ export default function EmpleadosTableRow({
                 <Box sx={{ display: 'flex' }}>
                     {show.show ? (
                         <>
-                            <LightTooltip title='Guardar' placement='left' arrow>
-                                <Button
-                                    variant='contained'
-                                    color='success'
-                                    disableElevation
-                                    size='small'
-                                    disabled={edit.isPending || !isValid}
-                                    onClick={handleSubmit((data) => edit.mutate({ id_mdoalidadvalidacion: Number(data.id_modalidadvalidacion), id: empleado.id }))}
-                                    sx={{ borderRadius: '4px 0 0 4px' }}
-                                >
-                                    {!edit.isPending ? <SaveAsRoundedIcon /> : <SyncIcon className='animate-spin' style={{ animationDirection: 'reverse' }} />}
-                                </Button>
-                            </LightTooltip>
-                            <LightTooltip title='Cancelar' placement='left' arrow>
-                                <Button
-                                    variant='contained'
-                                    color='error'
-                                    disableElevation
-                                    size='small'
-                                    disabled={edit.isPending}
-                                    onClick={show.handleShow}
-                                    sx={{ borderRadius: '0 4px 4px 0' }}
-                                >
-                                    {!edit.isPending ? <CloseRoundedIcon /> : <SyncIcon className='animate-spin' style={{ animationDirection: 'reverse' }} />}
-                                </Button>
-                            </LightTooltip>
+                            <TableActionButton
+                                tooltip='Guardar'
+                                icon={<SaveAsRoundedIcon />}
+                                color='success'
+                                loading={edit.isPending}
+                                disabled={edit.isPending || !isValid}
+                                onClick={handleSubmit((data) => edit.mutate({ id_mdoalidadvalidacion: Number(data.id_modalidadvalidacion), id: empleado.id }))}
+                                position='first'
+                            />
+                            <TableActionButton
+                                tooltip='Cancelar'
+                                icon={<CloseRoundedIcon />}
+                                color='error'
+                                loading={edit.isPending}
+                                disabled={edit.isPending}
+                                onClick={() => show.handleShow()}
+                                position='last'
+                            />
                         </>
                     ) : (
                         <>
-                            <LightTooltip title='Editar' placement='left' arrow>
-                                <Button
-                                    variant='contained'
-                                    color='success'
-                                    disableElevation
-                                    size='small'
-                                    disabled={deactivate.isPending || empleado.estadoempleado.toLowerCase() === 'baja'}
-                                    onClick={() => {
-                                        show.handleShow();
-                                        reset();
-                                    }}
-                                    sx={{ borderRadius: '4px 0 0 4px' }}
-                                >
-                                    {!deactivate.isPending ? <EditRoundedIcon /> : <SyncIcon className='animate-spin' style={{ animationDirection: 'reverse' }} />}
-                                </Button>
-                            </LightTooltip>
-                            <LightTooltip title={confirm.confirm ? 'Confirmar' : '¿Dar Baja?'} placement='left' arrow>
-                                <Button
-                                    variant={empleado.estadoempleado.toLowerCase() === 'baja' ? 'contained' : confirm.confirm ? 'contained' : 'outlined'}
-                                    color='error'
-                                    disableElevation
-                                    size='small'
-                                    disabled={deactivate.isPending || empleado.estadoempleado.toLowerCase() === 'baja' || show.show}
-                                    onBlur={() => confirm.handleConfirm(false)}
-                                    onClick={confirm.confirm ? () => deactivate.mutate({ id: empleado.id }) : () => confirm.handleConfirm()}
-                                    sx={{ borderRadius: '0 4px 4px 0' }}
-                                >
-                                    {!deactivate.isPending ? <PersonRemoveRoundedIcon /> : <SyncIcon className='animate-spin' style={{ animationDirection: 'reverse' }} />}
-                                </Button>
-                            </LightTooltip>
+                            <TableActionButton
+                                tooltip='Editar'
+                                icon={<EditRoundedIcon />}
+                                color='success'
+                                loading={deactivate.isPending}
+                                disabled={deactivate.isPending || empleado.estadoempleado.toLowerCase() === 'baja'}
+                                onClick={() => {
+                                    show.handleShow();
+                                    reset();
+                                }}
+                                position='first'
+                            />
+                            <TableActionButton
+                                tooltip='¿Dar Baja?'
+                                confirmTooltip='Confirmar'
+                                icon={<PersonRemoveRoundedIcon />}
+                                color='error'
+                                loading={deactivate.isPending}
+                                disabled={deactivate.isPending || empleado.estadoempleado.toLowerCase() === 'baja' || show.show}
+                                onClick={() => deactivate.mutate({ id: empleado.id })}
+                                position='last'
+                            />
                         </>
                     )}
                 </Box>
