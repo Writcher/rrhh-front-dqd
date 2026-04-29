@@ -129,6 +129,31 @@ export async function getJornadasByImportacion(params: {
     };
 };
 
+export async function getAusenciasPendientesCountByProyecto(): Promise<number> {
+    try {
+        const token = await getToken();
+
+        const total = await fetch(`${CONFIG.URL_BASE}${CONFIG.URL_JORNADA}/ausencias/pendiente/count`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if (!total.ok) throw new Error(`Error getting total ausencias pendientes: ${total.status} - ${total.statusText}`);
+
+        return await total.json();
+    } catch (error) {
+        console.error('Get ausencias pendientes count failed: ', {
+            timestamp: new Date().toISOString(),
+            error: error instanceof Error ? error.message : error,
+            stack: error instanceof Error ? error.stack : undefined
+        });
+
+        throw error;
+    };
+};
+
 export async function createJornada(params: {
     entrada: string | null,
     salida: string | null,

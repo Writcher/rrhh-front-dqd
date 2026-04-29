@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AsistenciaResponseDto } from "@/lib/types/features/asistencia/asistencia-response";
 import NumbersRoundedIcon from '@mui/icons-material/NumbersRounded';
 import SearchIcon from '@mui/icons-material/Search';
+import SummarizeRoundedIcon from '@mui/icons-material/SummarizeRounded';
 
 const categories = [
     { category: 'Presentes', key: 'totalPresentes' },
@@ -15,10 +16,12 @@ const categories = [
 export function InicioStats({
     asistencia,
     importaciones,
+    ausencias,
     proyecto
 }: {
     asistencia: { data?: AsistenciaResponseDto, isLoading: boolean },
     importaciones: { data?: number, isLoading: boolean },
+    ausencias: { data?: number, isLoading: boolean },
     proyecto: number
 }) {
     return (
@@ -45,6 +48,18 @@ export function InicioStats({
                 </Button>
             </div>
             <div className='flex flex-col flex-1 gap-2'>
+                <InicioCard category='Ausencias Pendientes de Justificación' total={ausencias.data} isLoading={ausencias.isLoading} />
+                <Button
+                    component={Link}
+                    href={`/administrativo/ausencias?id_proyecto=${proyecto}&id_tipoausencia=3`}
+                    variant='contained'
+                    className='!bg-gray-800 !text-white !border-gray-800 hover:!bg-white hover:!text-orange-600 !border-2 hover:!border-orange-500'
+                    disableElevation
+                    fullWidth
+                    endIcon={<SummarizeRoundedIcon />}
+                >
+                    Justificar Ausencias
+                </Button>
                 <InicioCard category='Importaciones Pendientes de Revisión' total={importaciones.data} isLoading={importaciones.isLoading} />
                 <Button
                     component={Link}

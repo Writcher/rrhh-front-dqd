@@ -15,6 +15,7 @@ import { TableHeader } from '@/lib/components/common/tables/tableHeader';
 import { TableSkeleton } from '@/lib/components/common/tables/tableSkeleton';
 import { InicioAsistenciaTableRow } from './components/inicioAsistenciaTableRow';
 import { InicioStats } from './components/inicioStats';
+import { getAusenciasPendientesCountByProyecto } from '@/lib/actions/jornada/jornada.actions';
 
 export default function AdministrativoInicio({ proyecto }: { proyecto: number }) {
     //hooks
@@ -30,16 +31,21 @@ export default function AdministrativoInicio({ proyecto }: { proyecto: number })
         queryKey: ['getImportacionCountByProyecto'],
         queryFn: () => getImportacionCountByProyecto()
     });
+    const ausenciasPendientes = useQuery({
+        queryKey: ['getAusenciasPendientesCount'],
+        queryFn: () => getAusenciasPendientesCountByProyecto()
+    });
     //effects
     useEffect(() => {
         if (asistencia.isError) showWarning('Error al cargar asistencia');
         if (importaciones.isError) showWarning('Error al cargar total de importaciones pendientes');
-    }, [asistencia.isError, importaciones.isError, showWarning])
+        if (ausenciasPendientes.isError) showWarning('Error al cargar total de ausencias pendientes');
+    }, [asistencia.isError, importaciones.isError, ausenciasPendientes.isError, showWarning])
     return (
         <div className='flex flex-row gap-2 w-full h-full overflow-hidden'>
             {/** Stats */}
             <div className='flex flex-col flex-1 gap-2 overflow-hidden'>
-                <InicioStats asistencia={asistencia} importaciones={importaciones} proyecto={proyecto} />
+                <InicioStats asistencia={asistencia} importaciones={importaciones} ausencias={ausenciasPendientes} proyecto={proyecto} />
             </div>
             {/** Tabla */}
             <div className='flex flex-col lg:flex-2 flex-1 gap-2 overflow-hidden'>

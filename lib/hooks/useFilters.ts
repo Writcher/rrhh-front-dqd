@@ -36,16 +36,9 @@ export const useFilters = <TForm extends FieldValues>(
     const activeFiltersRef = useRef<Record<string, any>>(activeFilters);
     activeFiltersRef.current = activeFilters;
     const [anchor, setAnchor] = useState<EventTarget & HTMLButtonElement | null>(null);
-    const [visibility, setVisibility] = useState<Record<string, boolean>>(() => {
-        const defaults = Object.fromEntries(fields.map(field => [field.key, field.defaultVisible ?? false]));
-        if (!syncUrl) return defaults;
-        // Show filter inputs for any filter that has a value in the URL
-        const fromUrl = { ...defaults };
-        fields.forEach(field => {
-            if (searchParams.get(String(field.key))) fromUrl[String(field.key)] = true;
-        });
-        return fromUrl;
-    });
+    const [visibility, setVisibility] = useState<Record<string, boolean>>(() =>
+        Object.fromEntries(fields.map(field => [field.key, field.defaultVisible ?? false]))
+    );
 
     // Sync form values from URL on mount
     useEffect(() => {
