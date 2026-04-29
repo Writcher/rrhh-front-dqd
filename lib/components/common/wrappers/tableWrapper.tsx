@@ -2,6 +2,7 @@ import { TablePagination } from "@mui/material";
 
 export default function TableWrapper({
     paginated = true,
+    bordered = true,
     isLoading,
     page,
     limit,
@@ -11,6 +12,7 @@ export default function TableWrapper({
     children
 }: {
     paginated?: boolean,
+    bordered?: boolean,
     isLoading?: boolean,
     page?: number,
     limit?: number,
@@ -20,7 +22,7 @@ export default function TableWrapper({
     children?: React.ReactNode
 }) {
     return (
-        <div className='flex flex-col flex-1 w-full min-h-0 rounded border-2 border-orange-500 overflow-hidden'>
+        <div className={`flex flex-col flex-1 w-full min-h-0 rounded overflow-hidden${bordered ? ' border-2 border-orange-500' : ''}`}>
             {children}
             {paginated && (isLoading || (total ?? 0) > 0) &&
                 <div className='flex shrink-0 justify-end items-center border-t-2 border-orange-500'>

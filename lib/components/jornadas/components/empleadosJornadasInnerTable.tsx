@@ -17,20 +17,20 @@ import { EmpleadoJornadaFormData } from "../types/empleadosJornadaFormData";
 import { Button } from "@mui/material";
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import JornadaForm from "./jornadaForm";
+import { useUserRole } from "@/lib/hooks/useUserRole";
 
 export default function EmpleadosJornadasInnerTable({
-    isAdministrativo,
     isMensual,
     isActive,
     id
 }: {
-    isAdministrativo: boolean,
     isMensual: boolean,
     isActive: boolean,
     id: number
 }) {
     //hooks
     const { showWarning } = useSnackbar();
+    const { isAdministrativo } = useUserRole();
     const { setValue, watch } = useForm<EmpleadosJornadasInnerTableFiltersFormData>({
         defaultValues: {
             id_mes: '',
@@ -39,8 +39,8 @@ export default function EmpleadosJornadasInnerTable({
     });
     const tab = useTabs({ tab: isAdministrativo ? 'jornadas' : 'resumen' });
     const filters = useFilters([
-        { key: 'id_mes', type: 'select' },
-        { key: 'quincena', type: 'select' }
+        { key: 'id_mes', type: 'select', group: 'periodo' },
+        { key: 'quincena', type: 'select', group: 'periodo' }
     ], { setValue, watch });
     const show = useShow();
     //query
@@ -117,7 +117,6 @@ export default function EmpleadosJornadasInnerTable({
                             ? (
                                 <EmpleadosJornadasInnerTableJornadasTab
                                     id={id}
-                                    isAdministrativo={isAdministrativo}
                                     idMes={watch('id_mes')}
                                     quincena={watch('quincena')}
                                 />

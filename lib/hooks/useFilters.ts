@@ -9,6 +9,7 @@ export type FilterConfig<TForm extends FieldValues = FieldValues> = {
     normalKey?: Path<TForm>;
     defaultVisible?: boolean;
     debounceMs?: number;
+    group?: string;
 };
 
 export const useFilters = <TForm extends FieldValues>(
@@ -32,6 +33,8 @@ export const useFilters = <TForm extends FieldValues>(
     };
 
     const [activeFilters, setActiveFilters] = useState<Record<string, any>>(initActiveFilters);
+    const activeFiltersRef = useRef<Record<string, any>>(activeFilters);
+    activeFiltersRef.current = activeFilters;
     const [anchor, setAnchor] = useState<EventTarget & HTMLButtonElement | null>(null);
     const [visibility, setVisibility] = useState<Record<string, boolean>>(() => {
         const defaults = Object.fromEntries(fields.map(field => [field.key, field.defaultVisible ?? false]));
@@ -100,9 +103,10 @@ export const useFilters = <TForm extends FieldValues>(
 
         if (field.type === 'debounced-text') {
             if (field.normalKey) setValue(field.normalKey as Path<TForm>, value);
-            const newActiveFilters = { ...activeFilters };
+            const newActiveFilters = { ...activeFiltersRef.current };
             if (value) newActiveFilters[key] = value;
             else delete newActiveFilters[key];
+            activeFiltersRef.current = newActiveFilters;
             setActiveFilters(newActiveFilters);
             debouncedCommits[key](value, newActiveFilters);
             return;
@@ -115,7 +119,8 @@ export const useFilters = <TForm extends FieldValues>(
             setValue(key as Path<TForm>, value);
         };
 
-        const newActiveFilters = { ...activeFilters, [key]: value };
+        const newActiveFilters = { ...activeFiltersRef.current, [key]: value };
+        activeFiltersRef.current = newActiveFilters;
         setActiveFilters(newActiveFilters);
         if (syncUrl) updateUrl(newActiveFilters);
     };
@@ -124,10 +129,20 @@ export const useFilters = <TForm extends FieldValues>(
         const field = fields.find(field => field.key === key)!;
         setValue(key as Path<TForm>, '' as any);
         if (field.normalKey) setValue(field.normalKey as Path<TForm>, '' as any);
-        const newActiveFilters = { ...activeFilters };
+        const newActiveFilters = { ...activeFiltersRef.current };
         delete newActiveFilters[key];
+        activeFiltersRef.current = newActiveFilters;
         setActiveFilters(newActiveFilters);
         if (syncUrl) updateUrl(newActiveFilters);
+    };
+
+    const handleSelectFilter = (key: string) => {
+        const picked = fields.find(f => String(f.key) === key);
+        const groupKeys = picked?.group
+            ? fields.filter(f => f.group === picked.group).map(f => String(f.key))
+            : [key];
+        setVisibility(Object.fromEntries(fields.map(f => [String(f.key), groupKeys.includes(String(f.key))])));
+        setAnchor(null);
     };
 
     const handleCleanFilters = () => {
@@ -135,6 +150,7 @@ export const useFilters = <TForm extends FieldValues>(
             setValue(f.key as Path<TForm>, '' as any);
             if (f.normalKey) setValue(f.normalKey as Path<TForm>, '' as any);
         });
+        activeFiltersRef.current = {};
         setActiveFilters({});
         setVisibility(Object.fromEntries(fields.map(f => [f.key, f.defaultVisible ?? false])));
         setAnchor(null);
@@ -150,6 +166,7 @@ export const useFilters = <TForm extends FieldValues>(
         handleOpenFilters,
         handleCloseFilters,
         handleChange,
+        handleSelectFilter,
         handleCleanFilter,
         handleCleanFilters,
     };

@@ -23,10 +23,12 @@ import { TableHeader } from "../common/tables/tableHeader";
 import { TableBase } from "../common/tables/tableBase";
 import { ImportacionItemDto } from "@/lib/types/importacion/get-importacion";
 import ImportacionesTableRow from "./components/importacionesTableRow";
+import { useUserRole } from "@/lib/hooks/useUserRole";
 
-export default function Informes({ isAdministrativo }: { isAdministrativo?: boolean }) {
+export default function Informes() {
     //hooks
     const { showWarning } = useSnackbar();
+    const { isAdministrativo } = useUserRole();
     const { setValue, watch } = useForm<ImportacionesTableFiltersFormData>({
         defaultValues: {
             id_proyecto: '',
@@ -37,8 +39,8 @@ export default function Informes({ isAdministrativo }: { isAdministrativo?: bool
     });
     const filters = useFilters([
         { key: 'id_proyecto', type: 'select', defaultVisible: true },
-        { key: 'id_mes', type: 'select' },
-        { key: 'quincena', type: 'select' },
+        { key: 'id_mes', type: 'select', group: 'periodo' },
+        { key: 'quincena', type: 'select', group: 'periodo' },
         { key: 'incompletas', type: 'toggle' }
     ], { setValue, watch }, { syncUrl: true });
     const pagination = usePagination({
@@ -165,7 +167,6 @@ export default function Informes({ isAdministrativo }: { isAdministrativo?: bool
                                         <ImportacionesTableRow
                                             key={importacion.id}
                                             importacion={importacion}
-                                            isAdministrativo={isAdministrativo ?? false}
                                         />
                                     ))}
                             </TableBody>

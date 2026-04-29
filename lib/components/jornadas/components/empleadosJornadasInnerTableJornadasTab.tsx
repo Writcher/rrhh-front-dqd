@@ -11,12 +11,10 @@ import EmpleadosJornadasInnerTableJornadaRow from "./empleadosJornadasInnerTable
 
 export default function EmpleadosJornadasInnerTableJornadasTab({
     id,
-    isAdministrativo,
     idMes,
     quincena
 }: {
     id: number,
-    isAdministrativo: boolean,
     idMes: number | '',
     quincena: number | ''
 }) {
@@ -91,7 +89,6 @@ export default function EmpleadosJornadasInnerTableJornadasTab({
                                 <EmpleadosJornadasInnerTableJornadaRow
                                     key={jornada.id}
                                     jornada={jornada}
-                                    isAdministrativo={isAdministrativo}
                                 />
                             ))}
                     </TableBody>

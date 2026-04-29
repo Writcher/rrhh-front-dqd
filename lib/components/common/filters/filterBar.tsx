@@ -25,6 +25,7 @@ type FiltersHook = {
     handleOpenFilters: (event: React.MouseEvent<HTMLButtonElement>) => void
     handleCloseFilters: () => void
     handleChange: (key: string, value: any) => void
+    handleSelectFilter: (key: string) => void
     handleCleanFilters: () => void
 }
 
@@ -115,14 +116,9 @@ export function FilterBar({
     showMenu?: boolean
 }) {
     const {
-        anchor, openFilters, visibility, setVisibility,
-        handleOpenFilters, handleCloseFilters, handleChange, handleCleanFilters
+        anchor, openFilters, visibility,
+        handleOpenFilters, handleCloseFilters, handleChange, handleSelectFilter, handleCleanFilters
     } = filtersHook;
-
-    const handleSelectFilter = (key: string) => {
-        setVisibility(Object.fromEntries(items.map(item => [item.key, item.key === key || (key === 'id_mes' && item.key === 'quincena')])));
-        handleCloseFilters();
-    };
 
     const visibleItems = showMenu
         ? items.filter(item => visibility[item.key] && item.inputType !== 'toggle')

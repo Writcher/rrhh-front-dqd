@@ -13,7 +13,7 @@ export const ObservacionesTooltip = ({
     onDelete: (id: number) => void,
     sx?: SxProps<Theme>
 }) => (
-    <Box className='flex items-center justify-end'>
+    <Box className='flex w-full items-center justify-center'>
         {observaciones && observaciones.length > 0 && (
             <LightTooltip
                 title={

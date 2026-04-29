@@ -2,31 +2,32 @@ import { JornadaItemDto } from "@/lib/types/jornada/get-jornada"
 import { Box, TableRow } from "@mui/material"
 import { TableRowCell } from "../../common/tables/tableRowCell"
 import { formatFechaDiaSemana } from "@/lib/utils/formatFechaDiaSemana"
-import { formatHorasMinutos } from "@/lib/utils/formatHorasMinutos"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { deleteJornada, editJornada } from "@/lib/actions/jornada/jornada.actions"
+import { deleteJornada, editJornadaTipoAusencia } from "@/lib/actions/jornada/jornada.actions"
 import { useSnackbar } from "@/lib/contexts/snackbar"
 import { createObservacion, deleteObservacion } from "@/lib/actions/observacion/observacion.actions"
 import { useShow } from "@/lib/hooks/useShow"
 import { useForm } from "react-hook-form"
-import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import { getDay } from "@/lib/utils/getDay"
+import { EmpleadosAusenciasInnerTableRowFormData } from "../type/empleadosAusenciasInnerTableRowFormData"
+import { TableActionButton } from "../../common/components/tableActionButton"
 import SaveAsRoundedIcon from '@mui/icons-material/SaveAsRounded';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
-import { EmpleadosJornadasInnerTableJornadaRowFormData } from "../types/empleadosJornadasInnerTableJornadaRowFormData"
-import { ControlledTimePicker } from "../../common/inputs/controlledTimePicker"
-import { ControlledTextField } from "../../common/inputs/controlledTextField"
-import { PulsingWarning } from "../../common/components/warning"
-import { ObservacionesTooltip } from "../../common/components/observacionesTooltip"
-import { TableActionButton } from "../../common/components/tableActionButton"
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import { getDay } from "@/lib/utils/getDay"
+import { ObservacionesTooltip } from "../../common/components/observacionesTooltip"
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import { useUserRole } from "@/lib/hooks/useUserRole"
+import { TipoAusencia } from "@/lib/types/tipoAusencia/tipoAusencia.entity"
+import { ControlledSelect } from "../../common/inputs/controlledSelect"
+import { ControlledTextField } from "../../common/inputs/controlledTextField"
 
-export default function EmpleadosJornadasInnerTableJornadaRow({
-    jornada
+export default function EmpleadosAusenciasInnerTableRow({
+    ausencia,
+    tiposAusencia
 }: {
-    jornada: JornadaItemDto
+    ausencia: JornadaItemDto,
+    tiposAusencia: TipoAusencia[]
 }) {
     //init
     const queryClient = useQueryClient();
@@ -35,30 +36,28 @@ export default function EmpleadosJornadasInnerTableJornadaRow({
     const { isAdministrativo } = useUserRole();
     const showObservacion = useShow();
     const showEdit = useShow();
-    const { control, handleSubmit, formState: { isValid }, resetField, setValue } = useForm<EmpleadosJornadasInnerTableJornadaRowFormData>({
+    const { control, handleSubmit, formState: { isValid }, resetField, setValue } = useForm<EmpleadosAusenciasInnerTableRowFormData>({
         defaultValues: {
-            entrada: jornada.entrada ?? '',
-            salida: jornada.salida ?? '',
+            id_tipoausencia: ausencia.id_tipoausencia ?? '',
             observacion: ''
         }
     });
     //utils
-    const day = getDay(jornada.fecha);
+    const day = getDay(ausencia.fecha);
     //mutations
-    const edit = useMutation({
+    const justify = useMutation({
         mutationFn: (data: {
             id: number,
-            entrada: string,
-            salida: string
-        }) => editJornada(data),
+            id_tipoausencia: number | ''
+        }) => editJornadaTipoAusencia(data),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['getJornadasEmpleado']
+                queryKey: ['getAusenciasEmpleado']
             });
-            showSuccess('Jornada editada correctamente');
+            showSuccess('Ausencia justificada correctamente');
             showEdit.handleShow();
         },
-        onError: () => showError('Error al editar la jornada')
+        onError: () => showError('Error al justificar ausencia')
     });
     const removeJornada = useMutation({
         mutationFn: (data: {
@@ -66,7 +65,7 @@ export default function EmpleadosJornadasInnerTableJornadaRow({
         }) => deleteJornada(data),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['getJornadasEmpleado']
+                queryKey: ['getAusenciasEmpleado']
             });
             showSuccess('Jornada eliminada correctamente');
         },
@@ -79,7 +78,7 @@ export default function EmpleadosJornadasInnerTableJornadaRow({
         }) => createObservacion(data),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['getJornadasEmpleado']
+                queryKey: ['getAusenciasEmpleado']
             });
             showSuccess('Observación creada correctamente');
             showObservacion.handleShow();
@@ -92,7 +91,7 @@ export default function EmpleadosJornadasInnerTableJornadaRow({
         }) => deleteObservacion(data),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['getJornadasEmpleado']
+                queryKey: ['getAusenciasEmpleado']
             });
             showSuccess('Observación eliminada correctamente');
         },
@@ -101,10 +100,10 @@ export default function EmpleadosJornadasInnerTableJornadaRow({
     return (
         <TableRow>
             <TableRowCell alignment='left' position='first' color={day === 0 ? 'gray' : day === 1 ? 'green' : undefined}>
-                {formatFechaDiaSemana(jornada.fecha)}
+                {formatFechaDiaSemana(ausencia.fecha)}
             </TableRowCell>
             {showObservacion.show ? (
-                <TableRowCell alignment='center' span={7}>
+                <TableRowCell alignment='center' span={2}>
                     <ControlledTextField
                         control={control}
                         name='observacion'
@@ -117,52 +116,23 @@ export default function EmpleadosJornadasInnerTableJornadaRow({
                 <>
                     <TableRowCell alignment='center'>
                         {showEdit.show ? (
-                            <ControlledTimePicker
+                            <ControlledSelect
                                 control={control}
-                                name='entrada'
-                                rules={{ required: jornada.entrada ? false : 'Este campo es requerido' }}
-                                label='Entrada'
+                                name='id_tipoausencia'
+                                label='Tipo de Ausencia'
+                                disabled={tiposAusencia.length === 0 || !tiposAusencia}
+                                items={tiposAusencia}
                             />
                         ) : (
-                            jornada.entrada
+                            ausencia.tipoausencia
                         )}
                     </TableRowCell>
-                    <TableRowCell alignment='center'>
-                        {jornada.entrada_r}
-                    </TableRowCell>
-                    <TableRowCell alignment='center'>
-                        {showEdit.show ? (
-                            <ControlledTimePicker
-                                control={control}
-                                name='salida'
-                                rules={{ required: jornada.salida ? false : 'Este campo es requerido' }}
-                                label='Salida'
-                            />
-                        ) : (
-                            jornada.salida
-                        )}
-                    </TableRowCell>
-                    <TableRowCell alignment='center'>
-                        {jornada.salida_r}
-                    </TableRowCell>
-                    <TableRowCell alignment='center'>
-                        {formatHorasMinutos(jornada.total)}
-                    </TableRowCell>
-                    <TableRowCell alignment='center'>
-                        {jornada.tipojornada}
-                    </TableRowCell>
-                    <TableRowCell alignment='center'>
-                        {jornada.tipoausencia}
+                    <TableRowCell alignment='center' variant='buttons'>
+                        <ObservacionesTooltip observaciones={(ausencia.observaciones ?? []).map((observacion) => ({ id_jornada: ausencia.id, id: observacion.id, texto: observacion.texto }))} onDelete={(id: number) => removeObservacion.mutate({ id })} sx={{ borderRadius: '4px 4px 4px 4px' }} />
                     </TableRowCell>
                 </>
             )}
             <TableRowCell alignment='right' variant='buttons' position='last' color={day === 0 ? 'gray' : day === 1 ? 'green' : undefined}>
-                {(!showEdit.show && !showObservacion.show)
-                    ? jornada.es_manual
-                        ? <PulsingWarning />
-                        : null
-                    : null
-                }
                 <Box sx={{ display: 'flex' }}>
                     {(showObservacion.show || showEdit.show) &&
                         <>
@@ -173,14 +143,13 @@ export default function EmpleadosJornadasInnerTableJornadaRow({
                                 loading={create.isPending}
                                 disabled={create.isPending || !isValid}
                                 onClick={handleSubmit((data) => {
-                                    if (showEdit.show) edit.mutate({
-                                        id: jornada.id,
-                                        entrada: data.entrada,
-                                        salida: data.salida
+                                    if (showEdit.show) justify.mutate({
+                                        id: ausencia.id,
+                                        id_tipoausencia: data.id_tipoausencia
                                     });
                                     if (showObservacion.show) create.mutate({
                                         observacion: data.observacion,
-                                        id_jornada: jornada.id
+                                        id_jornada: ausencia.id
                                     });
                                 })}
                                 position='first'
@@ -201,7 +170,6 @@ export default function EmpleadosJornadasInnerTableJornadaRow({
                     }
                     {(!showEdit.show && !showObservacion.show) &&
                         <>
-                            <ObservacionesTooltip observaciones={(jornada.observaciones ?? []).map((observacion) => ({ id_jornada: jornada.id, id: observacion.id, texto: observacion.texto }))} onDelete={(id: number) => removeObservacion.mutate({ id })} sx={{ borderRadius: '4px 0 0 4px' }} />
                             <TableActionButton
                                 tooltip='Añadir Observación'
                                 icon={<AddRoundedIcon />}
@@ -210,32 +178,31 @@ export default function EmpleadosJornadasInnerTableJornadaRow({
                                     showObservacion.handleShow();
                                     resetField('observacion');
                                 }}
-                                position={jornada.observaciones?.length ? (isAdministrativo ? 'last' : 'middle') : (isAdministrativo ? 'only' : 'first')}
+                                position='first'
+                            />
+                            <TableActionButton
+                                tooltip='Justificar'
+                                icon={<EditRoundedIcon />}
+                                color='info'
+                                loading={justify.isPending}
+                                disabled={justify.isPending || removeJornada.isPending}
+                                onClick={() => {
+                                    showEdit.handleShow();
+                                    setValue('id_tipoausencia', ausencia.id_tipoausencia ?? '');
+                                }}
+                                position={isAdministrativo ? 'last' : 'middle'}
                             />
                             {!isAdministrativo &&
                                 <>
-                                    < TableActionButton
-                                        tooltip='Editar'
-                                        icon={<EditRoundedIcon />}
-                                        color='info'
-                                        loading={edit.isPending}
-                                        disabled={edit.isPending || removeJornada.isPending || jornada.tipoausencia != null}
-                                        onClick={() => {
-                                            showEdit.handleShow();
-                                            setValue('entrada', jornada.entrada ?? '');
-                                            setValue('salida', jornada.salida ?? '');
-                                        }}
-                                        position={'middle'}
-                                    />
                                     <TableActionButton
                                         tooltip='¿Borrar?'
                                         confirmTooltip='Confirmar'
                                         icon={<DeleteForeverRoundedIcon />}
                                         color='error'
                                         loading={removeJornada.isPending}
-                                        disabled={edit.isPending || removeJornada.isPending}
-                                        onClick={() => removeJornada.mutate({ id: jornada.id })}
-                                        position={'last'}
+                                        disabled={justify.isPending || removeJornada.isPending}
+                                        onClick={() => removeJornada.mutate({ id: ausencia.id })}
+                                        position='last'
                                     />
                                 </>
                             }

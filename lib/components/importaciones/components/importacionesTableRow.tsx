@@ -9,18 +9,18 @@ import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import Link from "next/link";
 import { TableActionButton } from "@/lib/components/common/components/tableActionButton";
+import { useUserRole } from "@/lib/hooks/useUserRole";
 
 export default function ImportacionesTableRow({
-    importacion,
-    isAdministrativo
+    importacion
 }: {
-    importacion: ImportacionItemDto,
-    isAdministrativo: boolean
+    importacion: ImportacionItemDto
 }) {
     //init
     const queryClient = useQueryClient();
     //hooks
     const { showSuccess, showError } = useSnackbar();
+    const { isAdministrativo } = useUserRole();
     //mutacion
     const remove = useMutation({
         mutationFn: (data: { id: number }) => deleteImportacion(data),

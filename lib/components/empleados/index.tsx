@@ -26,10 +26,12 @@ import NumbersRoundedIcon from '@mui/icons-material/NumbersRounded';
 import SyncIcon from '@mui/icons-material/Sync';
 import { EmpleadoItemDto } from "@/lib/types/empleado/get-empleado";
 import EmpleadosTableRow from "./components/empleadosTableRow";
+import { useUserRole } from "@/lib/hooks/useUserRole";
 
-export default function Empleados({ isAdministrativo }: { isAdministrativo?: boolean }) {
+export default function Empleados() {
     //hooks
     const { showSuccess, showError, showWarning } = useSnackbar();
+    const { isAdministrativo } = useUserRole();
     const { setValue, watch } = useForm<EmpleadosTableFiltersFormData>({
         defaultValues: {
             nombre: '',

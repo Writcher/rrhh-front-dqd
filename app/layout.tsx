@@ -5,18 +5,20 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import queryClient from "../lib/providers/queryProvider";
 import { AuthSessionProvider } from "@/lib/providers/sessionProvider";
 import { DrawerProvider } from "@/lib/contexts/drawer";
+import { auth } from "@/auth";
 
 const inter = Inter({ subsets: ['latin'] });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
     <html lang="es">
       <body className={`${inter.className} antialiased`}>
-        <AuthSessionProvider>
+        <AuthSessionProvider session={session}>
           <QueryClientProvider client={queryClient}>
             <DrawerProvider>
               <SnackbarProvider>
