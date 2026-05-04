@@ -17,15 +17,19 @@ import { getNombreById } from "@/lib/utils/getNombreById";
 import TableWrapper from "../common/wrappers/tableWrapper";
 import { TableHeader } from "../common/tables/tableHeader";
 import { TableSkeleton } from "../common/tables/tableSkeleton";
-import { TableBody } from "@mui/material";
+import { Button, TableBody } from "@mui/material";
 import { TableBase } from "../common/tables/tableBase";
 import { EmpleadoItemDto } from "@/lib/types/empleado/get-empleado";
 import { useExpand } from "@/lib/hooks/useExpand";
 import EmpleadosJornadasTableRow from "./components/empleadosJornadasTableRow";
+import { useUserRole } from "@/lib/hooks/useUserRole";
+import Link from "next/link";
+import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 
 export default function Jornadas() {
     //hooks
     const { showWarning } = useSnackbar();
+    const { isAdministrativo } = useUserRole();
     const { setValue, watch } = useForm<EmpleadosJornadasTableFiltersFormData>({
         defaultValues: {
             nombre: '',
@@ -104,6 +108,23 @@ export default function Jornadas() {
                     { key: 'id_tipoempleado', menuLabel: 'Filtrar por Tipo de Empleado', inputLabel: 'Tipo de Empleado', inputType: 'select', options: tiposEmpleado.data, value: watch('id_tipoempleado') },
                     { key: 'manual', inputLabel: 'Solo Marcas Manuales', inputType: 'toggle', value: watch('manual') }
                 ]}
+                actions={
+                    <>
+                        {!isAdministrativo &&
+                            <Button
+                                component={Link}
+                                href={'/rrhh/jornadas/exportar'}
+                                variant='contained'
+                                color='success'
+                                className='!h-10'
+                                disableElevation
+                                endIcon={<DownloadRoundedIcon />}
+                            >
+                                Exportar Resumen
+                            </Button>
+                        }
+                    </>
+                }
             />
             {/** Filtros Activos */}
             <ActiveFilters

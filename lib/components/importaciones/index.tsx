@@ -143,7 +143,7 @@ export default function Informes() {
                                     { title: 'Nombre', width: `${isAdministrativo ? '20%' : '25%'}`, alignment: 'left' },
                                     { title: 'Proyecto', width: `${isAdministrativo ? '20%' : '25%'}`, alignment: 'center' },
                                     { title: 'Usuario', width: `${isAdministrativo ? '20%' : '25%'}`, alignment: 'center' },
-                                    { title: 'Estado', width: `${isAdministrativo ? '20%' : '25%'}`, alignment: 'center' },
+                                    { title: 'Estado', width: `${isAdministrativo ? '20%' : '25%'}`, alignment: `${isAdministrativo ? 'center' : 'right'}` },
                                     { title: 'Acciones', width: '20%', alignment: 'right', visible: isAdministrativo }
                                 ]}
                             />
@@ -155,7 +155,7 @@ export default function Informes() {
                                     { variant: 'text', alignment: 'left', colWidth: `${isAdministrativo ? '20%' : '25%'}`, width: 150 },
                                     { variant: 'text', alignment: 'center', colWidth: `${isAdministrativo ? '20%' : '25%'}`, width: 100 },
                                     { variant: 'text', alignment: 'center', colWidth: `${isAdministrativo ? '20%' : '25%'}`, width: 150 },
-                                    { variant: 'rectangular', alignment: 'center', colWidth: `${isAdministrativo ? '20%' : '25%'}`, width: 100 },
+                                    { variant: 'rectangular', alignment: `${isAdministrativo ? 'center' : 'right'}`, colWidth: `${isAdministrativo ? '20%' : '25%'}`, width: 100 },
                                     { variant: 'rectangular', alignment: 'right', colWidth: '20%', width: 120, visible: isAdministrativo }
                                 ]}
                             />

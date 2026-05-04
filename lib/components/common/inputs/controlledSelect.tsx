@@ -1,14 +1,6 @@
 import { MenuItem, Skeleton, TextField } from "@mui/material";
 import { Control, Controller, FieldValues, Path, RegisterOptions } from "react-hook-form";
 
-const selectSlotProps = {
-    select: {
-        MenuProps: {
-            slotProps: { paper: { style: { marginTop: '4px', maxHeight: '200px' } } }
-        }
-    }
-};
-
 interface IdConNombre {
     id: number,
     nombre: string
@@ -21,6 +13,7 @@ export function ControlledSelect<T extends FieldValues, K extends IdConNombre>({
     rules,
     isLoading = false,
     disabled,
+    multiple = false,
     items
 }: {
     control: Control<T>,
@@ -29,6 +22,7 @@ export function ControlledSelect<T extends FieldValues, K extends IdConNombre>({
     rules?: Omit<RegisterOptions<T, Path<T>>, 'disabled' | 'valueAsNumber' | 'valueAsDate' | 'setValueAs'>,
     isLoading?: boolean,
     disabled?: boolean,
+    multiple?: boolean,
     items: K[]
 }) {
     if (isLoading) {
@@ -58,7 +52,20 @@ export function ControlledSelect<T extends FieldValues, K extends IdConNombre>({
                     error={!!error}
                     helperText={error?.message}
                     disabled={disabled ?? false}
-                    slotProps={selectSlotProps}
+                    slotProps={{
+                        select: {
+                            multiple,
+                            ...(multiple && {
+                                renderValue: (selected) => (selected as number[])
+                                    .map(id => items.find(item => item.id === id)?.nombre)
+                                    .filter(Boolean)
+                                    .join(', ')
+                            }),
+                            MenuProps: {
+                                slotProps: { paper: { style: { marginTop: '4px', maxHeight: '200px' } } }
+                            }
+                        }
+                    }}
                 >
                     {items.map((item) => (
                         <MenuItem key={item.id} value={item.id}>

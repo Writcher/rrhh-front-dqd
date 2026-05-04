@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { InicioCard } from "./inicioCard";
+import { StatsCard } from "@/lib/components/common/components/statsCard";
 import Link from "next/link";
 import { AsistenciaResponseDto } from "@/lib/types/features/asistencia/asistencia-response";
 import NumbersRoundedIcon from '@mui/icons-material/NumbersRounded';
@@ -29,7 +29,7 @@ export function InicioStats({
             <div className='flex flex-col gap-2 overflow-auto'>
                 <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-2'>
                     {categories.map(({ category, key }) => (
-                        <InicioCard key={key} category={category} total={asistencia.data?.[key]} isLoading={asistencia.isLoading} />
+                        <StatsCard key={key} category={category} total={asistencia.data?.[key]} isLoading={asistencia.isLoading} />
                     ))}
                 </div>
                 <div className='flex justify-start items-center border-2 border-orange-500 px-6 p-4 rounded text-gray-700 text-xs'>
@@ -48,7 +48,7 @@ export function InicioStats({
                 </Button>
             </div>
             <div className='flex flex-col flex-1 gap-2'>
-                <InicioCard category='Ausencias Pendientes de Justificación' total={ausencias.data} isLoading={ausencias.isLoading} />
+                <StatsCard category='Ausencias Pendientes de Justificación' total={ausencias.data} isLoading={ausencias.isLoading} />
                 <Button
                     component={Link}
                     href={`/administrativo/ausencias?id_proyecto=${proyecto}&id_tipoausencia=3`}
@@ -60,7 +60,7 @@ export function InicioStats({
                 >
                     Justificar Ausencias
                 </Button>
-                <InicioCard category='Importaciones Pendientes de Revisión' total={importaciones.data} isLoading={importaciones.isLoading} />
+                <StatsCard category='Importaciones Pendientes de Revisión' total={importaciones.data} isLoading={importaciones.isLoading} />
                 <Button
                     component={Link}
                     href={`/administrativo/importaciones?id_proyecto=${proyecto}&incompletas=true`}

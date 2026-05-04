@@ -1,6 +1,6 @@
 import { Skeleton } from "@mui/material";
 
-export function InicioCard({
+export function StatsCard({
     category,
     total,
     isLoading

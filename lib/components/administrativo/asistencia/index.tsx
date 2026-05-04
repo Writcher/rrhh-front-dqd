@@ -24,6 +24,14 @@ import { exportAsistencia } from "@/lib/actions/features/export/export.actions";
 import { getNombreById } from "@/lib/utils/getNombreById";
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import SyncIcon from '@mui/icons-material/Sync';
+import { StatsCard } from "../../common/components/statsCard";
+
+const categories = [
+    { category: 'Presentes', key: 'totalPresentes' },
+    { category: 'Jornaleros Presentes', key: 'totalJornaleros' },
+    { category: 'Mensuales Presentes', key: 'totalMensuales' },
+    { category: 'Ausentes', key: 'totalAusentes' },
+] as const;
 
 export default function Asistencia() {
     //hooks
@@ -53,15 +61,15 @@ export default function Asistencia() {
         queryKey: [
             'getAsistencia',
             pagination.page,
-            pagination.limit, 
-            watch('id_proyecto'), 
+            pagination.limit,
+            watch('id_proyecto'),
             watch('fecha')
         ],
-        queryFn: () => getAsistencia({ 
-            page: pagination.page, 
+        queryFn: () => getAsistencia({
+            page: pagination.page,
             limit: pagination.limit,
-            id_proyecto: watch('id_proyecto'), 
-            fecha: watch('fecha') 
+            id_proyecto: watch('id_proyecto'),
+            fecha: watch('fecha')
         }),
         enabled: !!watch('id_proyecto') && !!watch('fecha')
     });
@@ -117,6 +125,12 @@ export default function Asistencia() {
                 showClean={false}
                 showMenu={false}
             />
+            {/** Stats */}
+            <div className='grid grid-cols-4 grid-rows-1 gap-2'>
+                {categories.map(({ category, key }) => (
+                    <StatsCard key={key} category={category} total={asistencia.data?.[key]} isLoading={asistencia.isLoading} />
+                ))}
+            </div>
             {/** Tabs */}
             <TableTabs
                 handleTabChange={(newTab: string) => tab.handleTabChange(null, newTab)}
@@ -185,6 +199,6 @@ export default function Asistencia() {
                     Empleados
                 </Button>
             </div>
-        </div>
+        </div >
     );
 };
