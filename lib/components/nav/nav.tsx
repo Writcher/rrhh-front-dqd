@@ -23,20 +23,14 @@ const administrativo = [
     { name: 'Empleados', href: '/administrativo/empleados', icon: PeopleAltRoundedIcon },
 ];
 
-const administrador = [
-    { name: 'Inicio', href: '/administrador', icon: HomeRoundedIcon },
-    { name: 'Usuarios', href: '/administrador/usuarios', icon: PeopleAltRoundedIcon },
-    { name: 'Parametros', href: '/administrador/parametros', icon: SettingsRoundedIcon },
-];
-
 const rrhh = [
     { name: 'Inicio', href: '/rrhh', icon: HomeRoundedIcon },
     { name: 'Jornadas', href: '/rrhh/jornadas', icon: SummarizeRoundedIcon },
     { name: 'Ausencias', href: '/rrhh/ausencias', icon: SummarizeRoundedIcon },
     { name: 'Informes', href: '/rrhh/importaciones', icon: UploadFileRoundedIcon },
     { name: 'Empleados', href: '/rrhh/empleados', icon: PeopleAltRoundedIcon },
+    { name: 'Configuración', href: '/rrhh/configuracion', icon: SettingsRoundedIcon }
 ];
-
 
 function NavButton({ hidden, icon, label, onClick, href, color, className, classNameHidden }: {
     hidden: boolean;
@@ -78,15 +72,11 @@ function NavButton({ hidden, icon, label, onClick, href, color, className, class
     );
 };
 
-function NavLinks({ role, hidden }: { hidden: boolean, role: 'Administrativo' | 'Recursos Humanos' | 'Administrador' }) {
+function NavLinks({ role, hidden }: { hidden: boolean, role: 'Administrativo' | 'Recursos Humanos' }) {
     const pathname = usePathname();
     let base;
     let links;
     switch (role) {
-        case 'Administrador':
-            base = '/administrador';
-            links = administrador;
-            break;
         case 'Administrativo':
             base = '/administrativo';
             links = administrativo
@@ -123,7 +113,7 @@ function NavLinks({ role, hidden }: { hidden: boolean, role: 'Administrativo' | 
     );
 };
 
-export default function Nav({ role }: { role: 'Administrativo' | 'Recursos Humanos' | 'Administrador' }) {
+export default function Nav({ role }: { role: 'Administrativo' | 'Recursos Humanos' }) {
     const { hidden, toggleDrawer } = useDrawer();
 
     return (

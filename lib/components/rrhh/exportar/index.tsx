@@ -10,7 +10,7 @@ import { getMeses } from "@/lib/actions/mes/mes.actions";
 import { getTiposEmpleado } from "@/lib/actions/tipoEmpleado/tipoEmpleado.actions";
 import { getNombreById } from "@/lib/utils/getNombreById";
 import { getNombresMeses } from "@/lib/utils/getNombresMeses";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { exportResumen } from "@/lib/actions/features/export/export.actions";
 import { Button } from "@mui/material";
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
@@ -48,9 +48,10 @@ export default function Exportar() {
         queryFn: () => getMeses(),
         refetchOnWindowFocus: false
     });
-    //utils
-    const getNombreProyecto = getNombreById(proyectos.data ?? []);
-    const getNombreTipoEmpleado = getNombreById(tiposEmpleado.data ?? []);
+    //memo
+    const getNombreProyecto = useMemo(() => getNombreById(proyectos.data ?? []), [proyectos.data]);
+    const getNombreTipoEmpleado = useMemo(() => getNombreById(tiposEmpleado.data ?? []), [tiposEmpleado.data]);
+    const getNombreMes = useMemo(() => getNombreById(getNombresMeses(meses.data ?? [])), [meses.data]);
     //mutation
     const download = useMutation({
         mutationFn: (data: ExportFormData) => exportResumen(data),
@@ -58,7 +59,7 @@ export default function Exportar() {
             const url = window.URL.createObjectURL(response);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `Resumen de Horas - ${watch('proyectos').map(proyecto => getNombreProyecto(proyecto)).join(', ')}${watch('id_tipoempleado') != '' ? ' - ' + getNombreTipoEmpleado(Number(watch('id_tipoempleado'))) : ''}${' - ' + getNombreById(getNombresMeses(meses.data ?? []))(Number(watch('id_mes')))}${watch('quincena') === 1 ? ' - Primera Quincena' : watch('quincena') === 2 ? ' - Segunda Quincena' : ''}`;
+            a.download = `Resumen de Horas - ${watch('proyectos').map(proyecto => getNombreProyecto(proyecto)).join(', ')}${watch('id_tipoempleado') != '' ? ' - ' + getNombreTipoEmpleado(Number(watch('id_tipoempleado'))) : ''}${' - ' + getNombreMes(Number(watch('id_mes')))}${watch('quincena') === 1 ? ' - Primera Quincena' : watch('quincena') === 2 ? ' - Segunda Quincena' : ''}`;
             document.body.appendChild(a);
             a.click();
             a.remove();

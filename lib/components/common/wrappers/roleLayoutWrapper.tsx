@@ -3,7 +3,7 @@
 import Nav from "@/lib/components/nav/nav";
 import { useDrawer } from "@/lib/contexts/drawer";
 
-export default function RoleLayoutWrapper({ role, children }: { role: 'Administrativo' | 'Recursos Humanos' | 'Administrador', children: React.ReactNode }) {
+export default function RoleLayoutWrapper({ role, children }: { role: 'Administrativo' | 'Recursos Humanos', children: React.ReactNode }) {
     const { hidden } = useDrawer();
 
     return (

@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getProyectos } from "@/lib/actions/proyecto/proyecto.actions";
 import { getTiposEmpleado } from "@/lib/actions/tipoEmpleado/tipoEmpleado.actions";
 import { getEmpleados } from "@/lib/actions/empleado/empleado.actions";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { FilterBar } from "../common/filters/filterBar";
 import { ActiveFilters } from "../common/filters/activeFilters";
 import { getNombreById } from "@/lib/utils/getNombreById";
@@ -90,6 +90,9 @@ export default function Jornadas() {
             manual: watch('manual')
         })
     });
+    //memo
+    const getNombreProyecto = useMemo(() => getNombreById(proyectos.data ?? []), [proyectos.data]);
+    const getNombreTipoEmpleado = useMemo(() => getNombreById(tiposEmpleado.data ?? []), [tiposEmpleado.data]);
     //feedback
     useEffect(() => {
         if (proyectos.isError) showWarning('Error al cargar proyectos');
@@ -133,8 +136,8 @@ export default function Jornadas() {
                 filters={[
                     { key: 'nombre', variant: 'text' },
                     { key: 'legajo', variant: 'text' },
-                    { key: 'id_proyecto', variant: 'select', util: getNombreById(proyectos.data ?? []) },
-                    { key: 'id_tipoempleado', variant: 'select', util: getNombreById(tiposEmpleado.data ?? []) },
+                    { key: 'id_proyecto', variant: 'select', util: getNombreProyecto },
+                    { key: 'id_tipoempleado', variant: 'select', util: getNombreTipoEmpleado },
                     { key: 'manual', variant: 'toggle', name: 'Solo Marcas Manuales' }
                 ]}
             />

@@ -11,7 +11,7 @@ import { useSnackbar } from "@/lib/contexts/snackbar";
 import { usePagination } from "@/lib/hooks/usePagination";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getAsistencia } from "@/lib/actions/features/asistencia/asistencia.actions";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useTabs } from "@/lib/hooks/useTabs";
 import Link from "next/link";
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
@@ -73,8 +73,12 @@ export default function Asistencia() {
         }),
         enabled: !!watch('id_proyecto') && !!watch('fecha')
     });
-    //utils
-    const getNombreProyecto = getNombreById(proyectos.data ?? []);
+    //memo
+    const getNombreProyecto = useMemo(() => getNombreById(proyectos.data ?? []), [proyectos.data]);
+    const empleadosTab = useMemo(
+        () => tab.tab === 'ausentes' ? asistencia.data?.ausentes ?? [] : asistencia.data?.presentes ?? [],
+        [tab.tab, asistencia.data]
+    );
     //mutation
     const download = useMutation({
         mutationFn: (data: AsistenciaTableFiltersFormData) => exportAsistencia(data),
@@ -151,7 +155,7 @@ export default function Asistencia() {
                     total={tab.tab === 'ausentes' ? asistencia.data?.totalAusentes ?? 0 : asistencia.data?.totalPresentes ?? 0}
                 >
                     <TableBase
-                        items={tab.tab === 'ausentes' ? asistencia.data?.ausentes ?? [] : asistencia.data?.presentes ?? []}
+                        items={empleadosTab}
                         isLoading={asistencia.isLoading}
                         header={
                             <TableHeader
@@ -174,11 +178,9 @@ export default function Asistencia() {
                         }
                         body={
                             <TableBody>
-                                {(tab.tab === 'ausentes' ? asistencia.data?.ausentes ?? [] : asistencia.data?.presentes ?? [])
-                                    .map((empleado, index) => (
-                                        <InicioAsistenciaTableRow empleado={empleado} index={index} key={index} />
-                                    ))
-                                }
+                                {empleadosTab.map((empleado, index) => (
+                                    <InicioAsistenciaTableRow empleado={empleado} index={index} key={index} />
+                                ))}
                             </TableBody>
                         }
                         noItemMessage={tab.tab === 'ausentes' ? 'No se encontraron ausentes' : 'No se encontraron presentes'}

@@ -12,7 +12,7 @@ import { getTiposEmpleado } from "@/lib/actions/tipoEmpleado/tipoEmpleado.action
 import { getModalidadesValidacion } from "@/lib/actions/modalidadValidacion/modalidadValidacion.actions";
 import { getEmpleados } from "@/lib/actions/empleado/empleado.actions";
 import { syncEmpleados } from "@/lib/actions/features/sync/sync.actions";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { getNombreById } from "@/lib/utils/getNombreById";
 import TableWrapper from "../common/wrappers/tableWrapper";
 import { TableBase } from "../common/tables/tableBase";
@@ -99,6 +99,9 @@ export default function Empleados() {
         onSuccess: () => showSuccess('Empleados sincronizados correctamente'),
         onError: () => showError('Error al sincronizar empleados')
     });
+    //memo
+    const getNombreProyecto = useMemo(() => getNombreById(proyectos.data ?? []), [proyectos.data]);
+    const getNombreTipoEmpleado = useMemo(() => getNombreById(tiposEmpleado.data ?? []), [tiposEmpleado.data]);
     //feedback
     useEffect(() => {
         if (proyectos.isError) showWarning('Error al cargar proyectos');
@@ -155,8 +158,8 @@ export default function Empleados() {
                 filters={[
                     { key: 'nombre', variant: 'text' },
                     { key: 'legajo', variant: 'text' },
-                    { key: 'id_proyecto', variant: 'select', util: getNombreById(proyectos.data ?? []) },
-                    { key: 'id_tipoempleado', variant: 'select', util: getNombreById(tiposEmpleado.data ?? []) }
+                    { key: 'id_proyecto', variant: 'select', util: getNombreProyecto },
+                    { key: 'id_tipoempleado', variant: 'select', util: getNombreTipoEmpleado }
                 ]}
             />
             {/** Tabla */}

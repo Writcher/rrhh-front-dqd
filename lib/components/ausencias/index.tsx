@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getProyectos } from "@/lib/actions/proyecto/proyecto.actions";
 import { getTiposEmpleado } from "@/lib/actions/tipoEmpleado/tipoEmpleado.actions";
 import { getEmpleados } from "@/lib/actions/empleado/empleado.actions";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { FilterBar } from "../common/filters/filterBar";
 import { ActiveFilters } from "../common/filters/activeFilters";
 import { getNombreById } from "@/lib/utils/getNombreById";
@@ -109,6 +109,12 @@ export default function Jornadas() {
         }),
         enabled: watch('id_mes') !== '' && watch('quincena') !== ''
     });
+    //memo
+    const nombresMeses = useMemo(() => getNombresMeses(meses.data ?? []), [meses.data]);
+    const getNombreProyecto = useMemo(() => getNombreById(proyectos.data ?? []), [proyectos.data]);
+    const getNombreTipoEmpleado = useMemo(() => getNombreById(tiposEmpleado.data ?? []), [tiposEmpleado.data]);
+    const getNombreTipoAusencia = useMemo(() => getNombreById(tiposAusencia.data ?? []), [tiposAusencia.data]);
+    const getNombreMes = useMemo(() => getNombreById(nombresMeses), [nombresMeses]);
     //defaults
     useEffect(() => {
         if (!meses.data || meses.data.length === 0) return;
@@ -138,7 +144,7 @@ export default function Jornadas() {
                     { key: 'id_proyecto', menuLabel: 'Filtrar por Proyecto', inputLabel: 'Proyecto', inputType: 'select', options: proyectos.data, value: watch('id_proyecto') },
                     { key: 'id_tipoempleado', menuLabel: 'Filtrar por Tipo de Empleado', inputLabel: 'Tipo de Empleado', inputType: 'select', options: tiposEmpleado.data, value: watch('id_tipoempleado') },
                     { key: 'id_tipoausencia', menuLabel: 'Filtrar por Tipo de Ausencia', inputLabel: 'Tipo de Ausencia', inputType: 'select', options: tiposAusencia.data, value: watch('id_tipoausencia') },
-                    { key: 'id_mes', menuLabel: 'Filtrar por Mes', inputLabel: 'Mes', inputType: 'select', options: getNombresMeses(meses.data ?? []), value: watch('id_mes'), loading: meses.isLoading },
+                    { key: 'id_mes', menuLabel: 'Filtrar por Mes', inputLabel: 'Mes', inputType: 'select', options: nombresMeses, value: watch('id_mes'), loading: meses.isLoading },
                     { key: 'quincena', inputLabel: 'Quincena', inputType: 'select', options: [{ id: 1, nombre: 'Primera Quincena' }, { id: 2, nombre: 'Segunda Quincena' }], value: watch('quincena') }
                 ]}
             />
@@ -149,10 +155,10 @@ export default function Jornadas() {
                 filters={[
                     { key: 'nombre', variant: 'text' },
                     { key: 'legajo', variant: 'text' },
-                    { key: 'id_proyecto', variant: 'select', util: getNombreById(proyectos.data ?? []) },
-                    { key: 'id_tipoempleado', variant: 'select', util: getNombreById(tiposEmpleado.data ?? []) },
-                    { key: 'id_tipoausencia', variant: 'select', util: getNombreById(tiposAusencia.data ?? []) },
-                    { key: 'id_mes', variant: 'select', util: getNombreById(getNombresMeses(meses.data ?? [])) },
+                    { key: 'id_proyecto', variant: 'select', util: getNombreProyecto },
+                    { key: 'id_tipoempleado', variant: 'select', util: getNombreTipoEmpleado },
+                    { key: 'id_tipoausencia', variant: 'select', util: getNombreTipoAusencia },
+                    { key: 'id_mes', variant: 'select', util: getNombreMes },
                     { key: 'quincena', variant: 'select', util: getNombreById([{ id: 1, nombre: 'Primera Quincena' }, { id: 2, nombre: 'Segunda Quincena' }]) }
                 ]}
             />

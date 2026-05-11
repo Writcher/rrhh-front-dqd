@@ -5,6 +5,8 @@ export const useUserRole = () => {
     const tipoUsuario = session?.user?.tipoUsuario;
     return {
         tipoUsuario,
-        isAdministrativo: tipoUsuario === 'Administrativo'
+        isAdministrativo: tipoUsuario === 'Administrativo',
+        isAdministrador: tipoUsuario === 'Administrador',
+        isRRHH: tipoUsuario === 'Recursos Humanos'
     };
 };

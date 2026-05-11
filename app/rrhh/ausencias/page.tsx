@@ -3,7 +3,7 @@ import Ausencias from "@/lib/components/ausencias";
 import PageWrapper from "@/lib/components/common/wrappers/pageWrapper";
 import { redirect } from "next/navigation";
 
-export default async function AdministrativoAusenciasPage() {
+export default async function RRHHAusenciasPage() {
     const session = await auth();
     if (!session) redirect('/');
 

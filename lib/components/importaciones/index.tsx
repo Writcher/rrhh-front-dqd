@@ -8,7 +8,7 @@ import { useFilters } from "@/lib/hooks/useFilters";
 import { getProyectos } from "@/lib/actions/proyecto/proyecto.actions";
 import { useQuery } from "@tanstack/react-query";
 import { getMeses } from "@/lib/actions/mes/mes.actions";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { getImportaciones } from "@/lib/actions/importacion/importacion.actions";
 import { FilterBar } from "../common/filters/filterBar";
 import { getNombresMeses } from "@/lib/utils/getNombresMeses";
@@ -78,6 +78,10 @@ export default function Informes() {
         }),
         refetchOnWindowFocus: false
     });
+    //memo
+    const nombresMeses = useMemo(() => getNombresMeses(meses.data ?? []), [meses.data]);
+    const getNombreProyecto = useMemo(() => getNombreById(proyectos.data ?? []), [proyectos.data]);
+    const getNombreMes = useMemo(() => getNombreById(nombresMeses), [nombresMeses]);
     //feedback
     useEffect(() => {
         if (proyectos.isError) showWarning('Error al cargar proyectos');
@@ -91,7 +95,7 @@ export default function Informes() {
                 filtersHook={filters}
                 items={[
                     { key: 'id_proyecto', menuLabel: 'Filtrar por Proyecto', inputLabel: 'Proyecto', inputType: 'select', options: proyectos.data, loading: proyectos.isLoading, value: watch('id_proyecto') },
-                    { key: 'id_mes', menuLabel: 'Filtrar por Mes', inputLabel: 'Mes', inputType: 'select', options: getNombresMeses(meses.data ?? []), loading: meses.isLoading, value: watch('id_mes') },
+                    { key: 'id_mes', menuLabel: 'Filtrar por Mes', inputLabel: 'Mes', inputType: 'select', options: nombresMeses, loading: meses.isLoading, value: watch('id_mes') },
                     { key: 'quincena', inputLabel: 'Quincena', inputType: 'select', options: [{ id: 1, nombre: 'Primera Quincena' }, { id: 2, nombre: 'Segunda Quincena' }], value: watch('quincena') },
                     { key: 'incompletas', inputLabel: 'Solo Sin Verificar', inputType: 'toggle', value: watch('incompletas') }
                 ]}
@@ -118,8 +122,8 @@ export default function Informes() {
                 activeFilters={filters.activeFilters}
                 handleCleanFilter={filters.handleCleanFilter}
                 filters={[
-                    { key: 'id_proyecto', variant: 'select', util: getNombreById(proyectos.data ?? []) },
-                    { key: 'id_mes', variant: 'select', util: getNombreById(getNombresMeses(meses.data ?? [])) },
+                    { key: 'id_proyecto', variant: 'select', util: getNombreProyecto },
+                    { key: 'id_mes', variant: 'select', util: getNombreMes },
                     { key: 'quincena', variant: 'select', util: getNombreById([{ id: 1, nombre: 'Primera Quincena' }, { id: 2, nombre: 'Segunda Quincena' }]) },
                     { key: 'incompletas', variant: 'toggle', name: 'Solo Sin Verificar' }
                 ]}

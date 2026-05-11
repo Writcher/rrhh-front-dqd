@@ -13,7 +13,6 @@ import { getMeses } from "@/lib/actions/mes/mes.actions";
 import EmpleadosJornadasInnerTableJornadasTab from "./empleadosJornadasInnerTableJornadasTab";
 import EmpleadosJornadasInnerTableResumenTab from "./empleadosJornadasInnerTableResumenTab";
 import { useShow } from "@/lib/hooks/useShow";
-import { EmpleadoJornadaFormData } from "../types/empleadosJornadaFormData";
 import { Button } from "@mui/material";
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import JornadaForm from "./jornadaForm";

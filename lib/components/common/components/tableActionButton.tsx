@@ -5,7 +5,7 @@ import LightTooltip from './tooltip';
 import { useConfirm } from '@/lib/hooks/useConfirm';
 
 type Position = 'first' | 'middle' | 'last' | 'only';
-type Color = 'success' | 'error' | 'info' | 'warning' | 'primary';
+type Color = 'success' | 'error' | 'info' | 'warning' | 'primary' | 'secondary';
 
 const radiusByPosition: Record<Position, SxProps<Theme>> = {
     first: { borderRadius: '4px 0 0 4px' },
