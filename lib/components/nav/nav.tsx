@@ -156,7 +156,10 @@ export default function Nav({ role }: { role: 'Administrativo' | 'Recursos Human
                         hidden={hidden}
                         icon={<LogoutRoundedIcon />}
                         label='Salir'
-                        onClick={doLogout}
+                        onClick={async () => {
+                            await doLogout();
+                            window.location.href = '/';
+                        }}
                         color='error'
                         className='!grow !items-center !justify-start !rounded !text-red-600 !font-medium hover:!bg-red-100 hover:!text-red-600'
                         classNameHidden='!grow !items-center !justify-center !rounded !text-red-600 !font-medium hover:!bg-red-100 hover:!text-red-600'

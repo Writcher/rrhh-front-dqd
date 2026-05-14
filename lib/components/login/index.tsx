@@ -1,7 +1,6 @@
 'use client'
 
 import { useSnackbar } from "@/lib/contexts/snackbar";
-import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { LoginFormData } from "./types/loginFormData";
 import { logIn } from "@/lib/actions/auth/auth.actions";
@@ -10,8 +9,6 @@ import LoginFormButton from "./components/loginFormButton";
 import { useForm } from "react-hook-form";
 
 export default function LoginForm() {
-    //init
-    const router = useRouter();
     //hooks
     const { showError } = useSnackbar();
     const { control, handleSubmit, formState: { isValid } } = useForm<LoginFormData>({
@@ -25,7 +22,7 @@ export default function LoginForm() {
         mutationFn: (data: LoginFormData) => logIn(data),
         onSuccess: (result) => {
             if (result.success) {
-                router.push('/');
+                window.location.href = '/';
             } else {
                 showError(result.error);
             };

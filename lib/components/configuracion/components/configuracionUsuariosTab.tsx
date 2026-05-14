@@ -171,12 +171,12 @@ export default function ConfiguracionUsuariosTab() {
                                     <TableSkeleton
                                         rows={10}
                                         columns={[
-                                            { variant: 'text', alignment: 'center', colWidth: '17%', width: 150 },
+                                            { variant: 'text', alignment: 'left', colWidth: '17%', width: 150 },
                                             { variant: 'text', alignment: 'center', colWidth: '17%', width: 150 },
                                             { variant: 'text', alignment: 'center', colWidth: '17%', width: 75 },
                                             { variant: 'text', alignment: 'center', colWidth: '17%', width: 75 },
                                             { variant: 'rectangular', alignment: 'center', colWidth: '17%', width: 75 },
-                                            { variant: 'rectangular', alignment: 'center', colWidth: '17%', width: 75 },
+                                            { variant: 'rectangular', alignment: 'right', colWidth: '17%', width: 75 },
                                         ]}
                                     />
                                 }
