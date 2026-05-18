@@ -6,7 +6,6 @@ import { TableSkeleton } from "@/lib/components/common/tables/tableSkeleton";
 import { TableTabs } from "@/lib/components/common/tables/tableTabs";
 import TableWrapper from "@/lib/components/common/wrappers/tableWrapper";
 import { Button, TableBody } from "@mui/material";
-import { InicioAsistenciaTableRow } from "../inicio/components/inicioAsistenciaTableRow";
 import { useSnackbar } from "@/lib/contexts/snackbar";
 import { usePagination } from "@/lib/hooks/usePagination";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -24,7 +23,9 @@ import { exportAsistencia } from "@/lib/actions/features/export/export.actions";
 import { getNombreById } from "@/lib/utils/getNombreById";
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import SyncIcon from '@mui/icons-material/Sync';
-import { StatsCard } from "../../common/components/statsCard";
+import { StatsCard } from "../common/components/statsCard";
+import { InicioAsistenciaTableRow } from "../administrativo/inicio/components/inicioAsistenciaTableRow";
+import { useUserRole } from "@/lib/hooks/useUserRole";
 
 const categories = [
     { category: 'Presentes', key: 'totalPresentes' },
@@ -36,6 +37,7 @@ const categories = [
 export default function Asistencia() {
     //hooks
     const { showSuccess, showError, showWarning } = useSnackbar();
+    const { isAdministrativo } = useUserRole();
     const { setValue, watch, handleSubmit } = useForm<AsistenciaTableFiltersFormData>({
         defaultValues: {
             id_proyecto: '',
@@ -194,7 +196,7 @@ export default function Asistencia() {
                     component={Link}
                     variant='contained'
                     color='warning'
-                    href={'/administrativo/empleados'}
+                    href={isAdministrativo ? '/administrativo/empleados' : '/administrador/empleados'}
                     disableElevation
                     startIcon={<ArrowBackRoundedIcon />}
                 >

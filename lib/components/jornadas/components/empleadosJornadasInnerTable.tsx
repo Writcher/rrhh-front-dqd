@@ -29,7 +29,7 @@ export default function EmpleadosJornadasInnerTable({
 }) {
     //hooks
     const { showWarning } = useSnackbar();
-    const { isAdministrativo } = useUserRole();
+    const { isAdministrativo, isAdministrador } = useUserRole();
     const { setValue, watch } = useForm<EmpleadosJornadasInnerTableFiltersFormData>({
         defaultValues: {
             id_mes: '',
@@ -93,7 +93,7 @@ export default function EmpleadosJornadasInnerTable({
                         ]}
                         actions={
                             <>
-                                {isAdministrativo &&
+                                {(isAdministrativo || isAdministrador) &&
                                     <Button
                                         variant='contained'
                                         color='success'

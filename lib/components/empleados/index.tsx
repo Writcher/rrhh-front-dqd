@@ -31,7 +31,7 @@ import { useUserRole } from "@/lib/hooks/useUserRole";
 export default function Empleados() {
     //hooks
     const { showSuccess, showError, showWarning } = useSnackbar();
-    const { isAdministrativo } = useUserRole();
+    const { isAdministrativo, isAdministrador } = useUserRole();
     const { setValue, watch } = useForm<EmpleadosTableFiltersFormData>({
         defaultValues: {
             nombre: '',
@@ -134,7 +134,7 @@ export default function Empleados() {
                         >
                             Sincronizar Empleados
                         </Button>
-                        {isAdministrativo &&
+                        {(isAdministrativo || isAdministrador) &&
                             <Button
                                 variant='contained'
                                 color='info'
@@ -142,7 +142,7 @@ export default function Empleados() {
                                 className='!h-10'
                                 disableElevation
                                 component={Link}
-                                href={`/administrativo/empleados/asistencia`}
+                                href={isAdministrativo ? `/administrativo/empleados/asistencia` : `/administrador/empleados/asistencia`}
                                 endIcon={<NumbersRoundedIcon />}
                             >
                                 Consultar Asistencia

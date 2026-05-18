@@ -3,7 +3,7 @@ import Completar from "@/lib/components/administrativo/completar";
 import PageWrapper from "@/lib/components/common/wrappers/pageWrapper";
 import { redirect } from "next/navigation";
 
-export default async function AdministrativoCompletarPage({ 
+export default async function AdministradorCompletarPage({ 
     params 
 }: {
     params: Promise<{ id: number }>

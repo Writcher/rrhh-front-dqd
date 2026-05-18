@@ -18,6 +18,7 @@ import UploadFileRoundedIcon from '@mui/icons-material/UploadFileRounded';
 import SyncIcon from '@mui/icons-material/Sync';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { importHikVision, importProsoft } from "@/lib/actions/features/import/import.actions";
+import { useUserRole } from "@/lib/hooks/useUserRole";
 
 export default function Importar() {
     //init
@@ -25,6 +26,7 @@ export default function Importar() {
     const queryClient = useQueryClient();
     //hooks
     const { showSuccess, showError, showWarning } = useSnackbar();
+    const { isAdministrativo } = useUserRole();
     const { control, handleSubmit, formState: { isValid, errors }, reset, watch, setValue } = useForm<ImportFormData>({
         defaultValues: {
             id_proyecto: '',
@@ -70,7 +72,7 @@ export default function Importar() {
         },
         onSuccess: (response) => {
             showSuccess('Jornadas importadas correctamente');
-            router.push(`/administrativo/importacion/${response}/completar`);
+            router.push(`${isAdministrativo ? '/administrativo' : '/administrador'}/importacion/${response}/completar`);
             queryClient.invalidateQueries({
                 queryKey: ['fetchImportaciones']
             });
@@ -115,7 +117,7 @@ export default function Importar() {
                     component={Link}
                     variant='contained'
                     color='warning'
-                    href={'/administrativo/importaciones'}
+                    href={isAdministrativo ? '/administrativo/importaciones' : '/administrador/importaciones'}
                     disableElevation
                     startIcon={
                         load.isPending ? (

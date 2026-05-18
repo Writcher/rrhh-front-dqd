@@ -28,7 +28,7 @@ import { useUserRole } from "@/lib/hooks/useUserRole";
 export default function Informes() {
     //hooks
     const { showWarning } = useSnackbar();
-    const { isAdministrativo } = useUserRole();
+    const { isAdministrativo, isAdministrador } = useUserRole();
     const { setValue, watch } = useForm<ImportacionesTableFiltersFormData>({
         defaultValues: {
             id_proyecto: '',
@@ -101,10 +101,10 @@ export default function Informes() {
                 ]}
                 actions={
                     <>
-                        {isAdministrativo &&
+                        {(isAdministrativo || isAdministrador) &&
                             <Button
                                 component={Link}
-                                href={'/administrativo/importaciones/importar'}
+                                href={isAdministrativo ? '/administrativo/importaciones/importar' : '/administrador/importaciones/importar'}
                                 variant='contained'
                                 color='success'
                                 className='!h-10'
@@ -144,11 +144,11 @@ export default function Informes() {
                         header={
                             <TableHeader
                                 titles={[
-                                    { title: 'Nombre', width: `${isAdministrativo ? '20%' : '25%'}`, alignment: 'left' },
-                                    { title: 'Proyecto', width: `${isAdministrativo ? '20%' : '25%'}`, alignment: 'center' },
-                                    { title: 'Usuario', width: `${isAdministrativo ? '20%' : '25%'}`, alignment: 'center' },
-                                    { title: 'Estado', width: `${isAdministrativo ? '20%' : '25%'}`, alignment: `${isAdministrativo ? 'center' : 'right'}` },
-                                    { title: 'Acciones', width: '20%', alignment: 'right', visible: isAdministrativo }
+                                    { title: 'Nombre', width: `${(isAdministrativo || isAdministrador) ? '20%' : '25%'}`, alignment: 'left' },
+                                    { title: 'Proyecto', width: `${(isAdministrativo || isAdministrador) ? '20%' : '25%'}`, alignment: 'center' },
+                                    { title: 'Usuario', width: `${(isAdministrativo || isAdministrador) ? '20%' : '25%'}`, alignment: 'center' },
+                                    { title: 'Estado', width: `${(isAdministrativo || isAdministrador) ? '20%' : '25%'}`, alignment: `${(isAdministrativo || isAdministrador) ? 'center' : 'right'}` },
+                                    { title: 'Acciones', width: '20%', alignment: 'right', visible: (isAdministrativo || isAdministrador) }
                                 ]}
                             />
                         }
@@ -156,11 +156,11 @@ export default function Informes() {
                             <TableSkeleton
                                 rows={10}
                                 columns={[
-                                    { variant: 'text', alignment: 'left', colWidth: `${isAdministrativo ? '20%' : '25%'}`, width: 150 },
-                                    { variant: 'text', alignment: 'center', colWidth: `${isAdministrativo ? '20%' : '25%'}`, width: 100 },
-                                    { variant: 'text', alignment: 'center', colWidth: `${isAdministrativo ? '20%' : '25%'}`, width: 150 },
-                                    { variant: 'rectangular', alignment: `${isAdministrativo ? 'center' : 'right'}`, colWidth: `${isAdministrativo ? '20%' : '25%'}`, width: 100 },
-                                    { variant: 'rectangular', alignment: 'right', colWidth: '20%', width: 120, visible: isAdministrativo }
+                                    { variant: 'text', alignment: 'left', colWidth: `${(isAdministrativo || isAdministrador) ? '20%' : '25%'}`, width: 150 },
+                                    { variant: 'text', alignment: 'center', colWidth: `${(isAdministrativo || isAdministrador) ? '20%' : '25%'}`, width: 100 },
+                                    { variant: 'text', alignment: 'center', colWidth: `${(isAdministrativo || isAdministrador) ? '20%' : '25%'}`, width: 150 },
+                                    { variant: 'rectangular', alignment: `${(isAdministrativo || isAdministrador) ? 'center' : 'right'}`, colWidth: `${(isAdministrativo || isAdministrador) ? '20%' : '25%'}`, width: 100 },
+                                    { variant: 'rectangular', alignment: 'right', colWidth: '20%', width: 120, visible: (isAdministrativo || isAdministrador) }
                                 ]}
                             />
                         }

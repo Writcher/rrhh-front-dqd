@@ -21,4 +21,5 @@ export default {
     URL_EXPORTAR: process.env.URL_EXPORTAR,
     URL_ASISTENCIA: process.env.URL_ASISTENCIA,
     URL_SYNC: process.env.URL_SYNC,
+    URL_MODALIDADIMPORTACION: process.env.URL_MODALIDADIMPORTACION
 };

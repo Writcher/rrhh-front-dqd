@@ -32,6 +32,15 @@ const rrhh = [
     { name: 'Configuración', href: '/rrhh/configuracion', icon: SettingsRoundedIcon }
 ];
 
+const administrador = [
+    { name: 'Inicio', href: '/administrador', icon: HomeRoundedIcon },
+    { name: 'Jornadas', href: '/administrador/jornadas', icon: SummarizeRoundedIcon },
+    { name: 'Ausencias', href: '/administrador/ausencias', icon: SummarizeRoundedIcon },
+    { name: 'Informes', href: '/administrador/importaciones', icon: UploadFileRoundedIcon },
+    { name: 'Empleados', href: '/administrador/empleados', icon: PeopleAltRoundedIcon },
+    { name: 'Configuración', href: '/administrador/configuracion', icon: SettingsRoundedIcon }
+];
+
 function NavButton({ hidden, icon, label, onClick, href, color, className, classNameHidden }: {
     hidden: boolean;
     icon: ReactNode;
@@ -72,7 +81,7 @@ function NavButton({ hidden, icon, label, onClick, href, color, className, class
     );
 };
 
-function NavLinks({ role, hidden }: { hidden: boolean, role: 'Administrativo' | 'Recursos Humanos' }) {
+function NavLinks({ role, hidden }: { hidden: boolean, role: 'Administrativo' | 'Recursos Humanos' | 'Administrador' }) {
     const pathname = usePathname();
     let base;
     let links;
@@ -84,6 +93,10 @@ function NavLinks({ role, hidden }: { hidden: boolean, role: 'Administrativo' | 
         case 'Recursos Humanos':
             base = '/rrhh';
             links = rrhh;
+            break;
+        case 'Administrador':
+            base = '/administrador';
+            links = administrador;
             break;
     };
     return (
@@ -113,7 +126,7 @@ function NavLinks({ role, hidden }: { hidden: boolean, role: 'Administrativo' | 
     );
 };
 
-export default function Nav({ role }: { role: 'Administrativo' | 'Recursos Humanos' }) {
+export default function Nav({ role }: { role: 'Administrativo' | 'Recursos Humanos' | 'Administrador' }) {
     const { hidden, toggleDrawer } = useDrawer();
 
     return (

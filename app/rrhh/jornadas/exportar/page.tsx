@@ -3,7 +3,7 @@ import PageWrapper from "@/lib/components/common/wrappers/pageWrapper";
 import Exportar from "@/lib/components/rrhh/exportar";
 import { redirect } from "next/navigation";
 
-export default async function ExportarPage() {
+export default async function RRHHExportarPage() {
     const session = await auth();
     if (!session) redirect('/');
 

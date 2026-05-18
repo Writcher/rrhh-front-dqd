@@ -29,7 +29,7 @@ import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 export default function Jornadas() {
     //hooks
     const { showWarning } = useSnackbar();
-    const { isAdministrativo } = useUserRole();
+    const { isRRHH } = useUserRole();
     const { setValue, watch } = useForm<EmpleadosJornadasTableFiltersFormData>({
         defaultValues: {
             nombre: '',
@@ -113,7 +113,7 @@ export default function Jornadas() {
                 ]}
                 actions={
                     <>
-                        {!isAdministrativo &&
+                        {isRRHH &&
                             <Button
                                 component={Link}
                                 href={'/rrhh/jornadas/exportar'}
