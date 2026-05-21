@@ -17,7 +17,7 @@ import { PulsingWarning } from "@/lib/components/common/components/warning";
 import SaveAsRoundedIcon from '@mui/icons-material/SaveAsRounded';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import VerifiedUserRoundedIcon from '@mui/icons-material/VerifiedUserRounded';
-import { ObservacionesTooltip } from "@/lib/components/common/components/observacionesTooltip";
+import { TableTooltip } from "@/lib/components/common/components/tableTooltip";
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { TableActionButton } from "@/lib/components/common/components/tableActionButton";
 
@@ -237,7 +237,13 @@ export default function CompletarTableRow({
                         </>
                     ) : (
                         <>
-                            <ObservacionesTooltip observaciones={jornada.observaciones} onDelete={(id: number) => removeObservacion.mutate({ id })} sx={{ borderRadius: '4px 0 0 4px' }} />
+                            <TableTooltip
+                                title='Observaciones:'
+                                items={jornada.observaciones}
+                                columns={[{ render: (o) => `• ${o.texto}` }]}
+                                onDelete={(id: number) => removeObservacion.mutate({ id })}
+                                position='first'
+                            />
                             <TableActionButton
                                 tooltip='Añadir Observación'
                                 icon={<AddRoundedIcon />}

@@ -14,7 +14,7 @@ import { TableActionButton } from "../../common/components/tableActionButton"
 import SaveAsRoundedIcon from '@mui/icons-material/SaveAsRounded';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import { ObservacionesTooltip } from "../../common/components/observacionesTooltip"
+import { TableTooltip } from "../../common/components/tableTooltip"
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import { useUserRole } from "@/lib/hooks/useUserRole"
@@ -128,7 +128,13 @@ export default function EmpleadosAusenciasInnerTableRow({
                         )}
                     </TableRowCell>
                     <TableRowCell alignment='center' variant='buttons'>
-                        <ObservacionesTooltip observaciones={(ausencia.observaciones ?? []).map((observacion) => ({ id_jornada: ausencia.id, id: observacion.id, texto: observacion.texto }))} onDelete={(id: number) => removeObservacion.mutate({ id })} sx={{ borderRadius: '4px 4px 4px 4px' }} />
+                        <TableTooltip
+                            title='Observaciones:'
+                            items={ausencia.observaciones ?? []}
+                            columns={[{ render: (o) => `• ${o.texto}` }]}
+                            onDelete={(id: number) => removeObservacion.mutate({ id })}
+                            position='only'
+                        />
                     </TableRowCell>
                 </>
             )}

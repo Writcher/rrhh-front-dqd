@@ -17,11 +17,12 @@ import { EmpleadosJornadasInnerTableJornadaRowFormData } from "../types/empleado
 import { ControlledTimePicker } from "../../common/inputs/controlledTimePicker"
 import { ControlledTextField } from "../../common/inputs/controlledTextField"
 import { PulsingWarning } from "../../common/components/warning"
-import { ObservacionesTooltip } from "../../common/components/observacionesTooltip"
+import { TableTooltip } from "../../common/components/tableTooltip"
 import { TableActionButton } from "../../common/components/tableActionButton"
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { getDay } from "@/lib/utils/getDay"
 import { useUserRole } from "@/lib/hooks/useUserRole"
+import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
 
 export default function EmpleadosJornadasInnerTableJornadaRow({
     jornada
@@ -44,6 +45,12 @@ export default function EmpleadosJornadasInnerTableJornadaRow({
     });
     //utils
     const day = getDay(jornada.fecha);
+    //const
+    const hasObservaciones = (jornada.observaciones?.length ?? 0) > 0;
+    const hasAuditorias = (jornada.auditorias?.length ?? 0) > 0;
+    const addObsPosition = (hasAuditorias || hasObservaciones)
+        ? (isAdministrativo ? 'last' : 'middle')
+        : (isAdministrativo ? 'only' : 'first');
     //mutations
     const edit = useMutation({
         mutationFn: (data: {
@@ -201,7 +208,26 @@ export default function EmpleadosJornadasInnerTableJornadaRow({
                     }
                     {(!showEdit.show && !showObservacion.show) &&
                         <>
-                            <ObservacionesTooltip observaciones={(jornada.observaciones ?? []).map((observacion) => ({ id_jornada: jornada.id, id: observacion.id, texto: observacion.texto }))} onDelete={(id: number) => removeObservacion.mutate({ id })} sx={{ borderRadius: '4px 0 0 4px' }} />
+                            <TableTooltip
+                                title='Auditoría: '
+                                items={jornada.auditorias ?? []}
+                                columns={[
+                                    { header: 'Fecha', render: (a) => new Date(a.fecha).toLocaleString() },
+                                    { header: 'Usuario', render: (a) => a.usuario },
+                                    { header: 'Entrada Anterior', render: (a) => a.entrada_anterior ?? '—' },
+                                    { header: 'Salida Anterior', render: (a) => a.salida_anterior ?? '—' },
+                                ]}
+                                position='first'
+                                icon={<HistoryRoundedIcon/>}
+                                color='info'
+                            />
+                            <TableTooltip
+                                title='Observaciones: '
+                                items={jornada.observaciones ?? []}
+                                columns={[{ render: (o) => `• ${o.texto}` }]}
+                                onDelete={(id: number) => removeObservacion.mutate({ id })}
+                                position={hasAuditorias ? 'middle' : 'first'}
+                            />
                             <TableActionButton
                                 tooltip='Añadir Observación'
                                 icon={<AddRoundedIcon />}
@@ -210,7 +236,7 @@ export default function EmpleadosJornadasInnerTableJornadaRow({
                                     showObservacion.handleShow();
                                     resetField('observacion');
                                 }}
-                                position={jornada.observaciones?.length ? (isAdministrativo ? 'last' : 'middle') : (isAdministrativo ? 'only' : 'first')}
+                                position={addObsPosition}
                             />
                             {!isAdministrativo &&
                                 <>

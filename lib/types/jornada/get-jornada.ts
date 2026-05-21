@@ -3,6 +3,15 @@ type observacionItem = {
     texto: string;
 };
 
+type auditoriaJornadaItem = {
+    id: number;
+    entrada_anterior: string | null;
+    salida_anterior: string | null;
+    fecha: Date;
+    usuario: string;
+};
+
+
 export type JornadaItemDto = {
     id: number;
     fecha: Date;
@@ -17,6 +26,7 @@ export type JornadaItemDto = {
     id_tipoausencia: number;
     es_manual: boolean;
     observaciones: observacionItem[];
+    auditorias: auditoriaJornadaItem[];
 };
 
 export type JornadaResponseDto = {

@@ -65,7 +65,7 @@ export async function getUsuarios(params: {
             }
         });
 
-        if (!usuarios.ok) throw new Error(`Error fetching usuarios: ${usuarios.status} - ${usuarios.statusText}`);
+        if (!usuarios.ok) throw new Error(`Error getting usuarios: ${usuarios.status} - ${usuarios.statusText}`);
 
         return await usuarios.json();
     } catch (error) {
