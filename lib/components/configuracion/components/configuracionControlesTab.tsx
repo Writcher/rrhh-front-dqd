@@ -8,11 +8,9 @@ import { useQuery } from "@tanstack/react-query";
 import { getProyectos } from "@/lib/actions/proyecto/proyecto.actions";
 import { getControles } from "@/lib/actions/control/control.actions";
 import { useEffect, useMemo } from "react";
-import { getNombreById } from "@/lib/utils/getNombreById";
 import { FilterBar } from "../../common/filters/filterBar";
 import { Button, TableBody } from "@mui/material";
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import { ActiveFilters } from "../../common/filters/activeFilters";
 import TableWrapper from "../../common/wrappers/tableWrapper";
 import { TableBase } from "../../common/tables/tableBase";
 import { TableHeader } from "../../common/tables/tableHeader";
@@ -53,8 +51,6 @@ export default function ConfiguraciónControlesTab() {
             id_proyecto: watch('id_proyecto')
         })
     });
-    //memo
-    const getNombreProyecto = useMemo(() => getNombreById(proyectos.data ?? []), [proyectos.data]);
     //feedback
     useEffect(() => {
         if (proyectos.isError) showWarning('Error al cargar proyectos');
