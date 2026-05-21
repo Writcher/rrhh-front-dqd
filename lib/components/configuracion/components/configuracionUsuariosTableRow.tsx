@@ -94,7 +94,7 @@ export default function ConfiguracionUsuariosTableRow({
     const getNombreProyecto = useMemo(() => getNombreById(proyectos), [proyectos]);
     return (
         <TableRow>
-            <TableRowCell alignment='left'>
+            <TableRowCell alignment='left' label='Nombre'>
                 {showEdit.show ? (
                     <ControlledTextField
                         control={control}
@@ -107,7 +107,7 @@ export default function ConfiguracionUsuariosTableRow({
                 )}
             </TableRowCell>
             {showPassword.show ? (
-                <TableRowCell alignment='center' span={4}>
+                <TableRowCell alignment='center' span={4} label='Nueva Contraseña'>
                     <ControlledTextField
                         control={control}
                         name='contraseña'
@@ -117,7 +117,7 @@ export default function ConfiguracionUsuariosTableRow({
                 </TableRowCell>
             ) : (
                 <>
-                    <TableRowCell alignment='center'>
+                    <TableRowCell alignment='center' label='Email'>
                         {showEdit.show ? (
                             <ControlledTextField
                                 control={control}
@@ -129,7 +129,7 @@ export default function ConfiguracionUsuariosTableRow({
                             usuario.email
                         )}
                     </TableRowCell>
-                    <TableRowCell alignment='center'>
+                    <TableRowCell alignment='center' label='Proyecto'>
                         {showEdit.show ? (
                             <ControlledSelect
                                 control={control}
@@ -142,7 +142,7 @@ export default function ConfiguracionUsuariosTableRow({
                             getNombreProyecto(usuario.id_proyecto)
                         )}
                     </TableRowCell>
-                    <TableRowCell alignment='center'>
+                    <TableRowCell alignment='center' label='Tipo'>
                         {showEdit.show ? (
                             <ControlledSelect
                                 control={control}
@@ -155,7 +155,7 @@ export default function ConfiguracionUsuariosTableRow({
                             usuario.tipousuario
                         )}
                     </TableRowCell>
-                    <TableRowCell alignment='center'>
+                    <TableRowCell alignment='center' label='Estado'>
                         <Chip
                             label={usuario.estadousuario}
                             className='!rounded'

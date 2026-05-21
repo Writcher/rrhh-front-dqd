@@ -58,7 +58,7 @@ export default function ConfiguracionTiposAusenciaTableRow({
     });
     return (
         <TableRow>
-            <TableRowCell alignment='left'>
+            <TableRowCell alignment='left' label='Nombre'>
                 {show.show ? (
                     <ControlledTextField
                         control={control}
@@ -70,7 +70,7 @@ export default function ConfiguracionTiposAusenciaTableRow({
                     tipoAusencia.nombre
                 )}
             </TableRowCell>
-            <TableRowCell alignment='center'>
+            <TableRowCell alignment='center' label='Estado'>
                         <Chip
                             label={tipoAusencia.estadoparametro}
                             className='!rounded'

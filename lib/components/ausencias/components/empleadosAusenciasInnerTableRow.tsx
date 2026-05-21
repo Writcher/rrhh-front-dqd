@@ -99,11 +99,11 @@ export default function EmpleadosAusenciasInnerTableRow({
     });
     return (
         <TableRow>
-            <TableRowCell alignment='left' position='first' color={day === 0 ? 'gray' : day === 1 ? 'green' : undefined}>
+            <TableRowCell alignment='left' position='first' color={day === 0 ? 'gray' : day === 1 ? 'green' : undefined} label='Fecha'>
                 {formatFechaDiaSemana(ausencia.fecha)}
             </TableRowCell>
             {showObservacion.show ? (
-                <TableRowCell alignment='center' span={2}>
+                <TableRowCell alignment='center' span={2} label='Observación'>
                     <ControlledTextField
                         control={control}
                         name='observacion'
@@ -114,7 +114,7 @@ export default function EmpleadosAusenciasInnerTableRow({
                 </TableRowCell>
             ) : (
                 <>
-                    <TableRowCell alignment='center'>
+                    <TableRowCell alignment='center' label='Tipo Ausencia'>
                         {showEdit.show ? (
                             <ControlledSelect
                                 control={control}
@@ -127,7 +127,7 @@ export default function EmpleadosAusenciasInnerTableRow({
                             ausencia.tipoausencia
                         )}
                     </TableRowCell>
-                    <TableRowCell alignment='center' variant='buttons'>
+                    <TableRowCell alignment='center' variant='buttons' label='Observaciones'>
                         <TableTooltip
                             title='Observaciones:'
                             items={ausencia.observaciones ?? []}

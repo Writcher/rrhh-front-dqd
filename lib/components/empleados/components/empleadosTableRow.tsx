@@ -63,19 +63,19 @@ export default function EmpleadosTableRow({
     }, [empleado, setValue, show.show])
     return (
         <TableRow>
-            <TableRowCell alignment='left'>
+            <TableRowCell alignment='left' label='Legajo'>
                 {empleado.legajo}
             </TableRowCell>
-            <TableRowCell alignment='center'>
+            <TableRowCell alignment='center' label='DNI'>
                 {empleado.dni}
             </TableRowCell>
-            <TableRowCell alignment='center'>
+            <TableRowCell alignment='center' label='Nombre'>
                 {empleado.nombre}
             </TableRowCell>
-            <TableRowCell alignment='center'>
+            <TableRowCell alignment='center' label='Tipo'>
                 {empleado.tipoempleado}
             </TableRowCell>
-            <TableRowCell alignment='center'>
+            <TableRowCell alignment='center' label='Validación'>
                 {show.show ? (
                     <ControlledSelect
                         control={control}
@@ -87,10 +87,10 @@ export default function EmpleadosTableRow({
                     empleado.modalidadvalidacion
                 )}
             </TableRowCell>
-            <TableRowCell alignment='center'>
+            <TableRowCell alignment='center' label='Proyecto'>
                 {empleado.nombreproyecto}
             </TableRowCell>
-            <TableRowCell alignment='center'>
+            <TableRowCell alignment='center' label='Estado'>
                 <Chip
                     label={empleado.estadoempleado}
                     className='!rounded'

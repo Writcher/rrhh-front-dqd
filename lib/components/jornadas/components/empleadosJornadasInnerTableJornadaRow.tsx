@@ -107,11 +107,11 @@ export default function EmpleadosJornadasInnerTableJornadaRow({
     });
     return (
         <TableRow>
-            <TableRowCell alignment='left' position='first' color={day === 0 ? 'gray' : day === 1 ? 'green' : undefined}>
+            <TableRowCell alignment='left' position='first' color={day === 0 ? 'gray' : day === 1 ? 'green' : undefined} label='Fecha'>
                 {formatFechaDiaSemana(jornada.fecha)}
             </TableRowCell>
             {showObservacion.show ? (
-                <TableRowCell alignment='center' span={7}>
+                <TableRowCell alignment='center' span={7} label='Observación'>
                     <ControlledTextField
                         control={control}
                         name='observacion'
@@ -122,7 +122,7 @@ export default function EmpleadosJornadasInnerTableJornadaRow({
                 </TableRowCell>
             ) : (
                 <>
-                    <TableRowCell alignment='center'>
+                    <TableRowCell alignment='center' label='Entrada'>
                         {showEdit.show ? (
                             <ControlledTimePicker
                                 control={control}
@@ -134,10 +134,10 @@ export default function EmpleadosJornadasInnerTableJornadaRow({
                             jornada.entrada
                         )}
                     </TableRowCell>
-                    <TableRowCell alignment='center'>
+                    <TableRowCell alignment='center' label='Entrada Real'>
                         {jornada.entrada_r}
                     </TableRowCell>
-                    <TableRowCell alignment='center'>
+                    <TableRowCell alignment='center' label='Salida'>
                         {showEdit.show ? (
                             <ControlledTimePicker
                                 control={control}
@@ -149,26 +149,25 @@ export default function EmpleadosJornadasInnerTableJornadaRow({
                             jornada.salida
                         )}
                     </TableRowCell>
-                    <TableRowCell alignment='center'>
+                    <TableRowCell alignment='center' label='Salida Real'>
                         {jornada.salida_r}
                     </TableRowCell>
-                    <TableRowCell alignment='center'>
+                    <TableRowCell alignment='center' label='Total'>
                         {formatHorasMinutos(jornada.total)}
                     </TableRowCell>
-                    <TableRowCell alignment='center'>
+                    <TableRowCell alignment='center' label='Tipo Jornada'>
                         {jornada.tipojornada}
                     </TableRowCell>
-                    <TableRowCell alignment='center'>
+                    <TableRowCell alignment='center' label='Tipo Ausencia'>
                         {jornada.tipoausencia}
                     </TableRowCell>
                 </>
             )}
             <TableRowCell alignment='right' variant='buttons' position='last' color={day === 0 ? 'gray' : day === 1 ? 'green' : undefined}>
-                {(!showEdit.show && !showObservacion.show)
-                    ? jornada.es_manual
-                        ? <PulsingWarning />
-                        : null
-                    : null
+                {(!showEdit.show && !showObservacion.show) && jornada.es_manual &&
+                    <div className='hidden md:flex'>
+                        <PulsingWarning />
+                    </div>
                 }
                 <Box sx={{ display: 'flex' }}>
                     {(showObservacion.show || showEdit.show) &&

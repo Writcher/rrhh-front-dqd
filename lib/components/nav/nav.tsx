@@ -7,6 +7,7 @@ import { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import MenuOpenRoundedIcon from '@mui/icons-material/MenuOpenRounded';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import UploadFileRoundedIcon from '@mui/icons-material/UploadFileRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
@@ -81,7 +82,7 @@ function NavButton({ hidden, icon, label, onClick, href, color, className, class
     );
 };
 
-function NavLinks({ role, hidden }: { hidden: boolean, role: 'Administrativo' | 'Recursos Humanos' | 'Administrador' }) {
+function NavLinks({ role, hidden, onNavigate }: { hidden: boolean, role: 'Administrativo' | 'Recursos Humanos' | 'Administrador', onNavigate?: () => void }) {
     const pathname = usePathname();
     let base;
     let links;
@@ -115,6 +116,7 @@ function NavLinks({ role, hidden }: { hidden: boolean, role: 'Administrativo' | 
                             icon={<LinkIcon />}
                             label={link.name}
                             href={link.href}
+                            onClick={onNavigate}
                             color='warning'
                             className={`!grow !items-center !justify-start !rounded !font-medium hover:!bg-orange-100 hover:!text-orange-600 ${isActive ? '!text-orange-600 !bg-orange-100' : '!text-gray-800'}`}
                             classNameHidden={`!grow !items-center !justify-center !rounded !font-medium hover:!bg-orange-100 hover:!text-orange-600 ${isActive ? '!text-orange-600 !bg-orange-100' : '!text-gray-800'}`}
@@ -126,59 +128,114 @@ function NavLinks({ role, hidden }: { hidden: boolean, role: 'Administrativo' | 
     );
 };
 
+function NavContent({ role, hidden, isMobile, onNavigate, onToggle, onLogout }: {
+    role: 'Administrativo' | 'Recursos Humanos' | 'Administrador';
+    hidden: boolean;
+    isMobile: boolean;
+    onNavigate?: () => void;
+    onToggle: () => void;
+    onLogout: () => void;
+}) {
+    return (
+        <div className='flex flex-col h-full w-full'>
+            <div className='flex shrink-0 h-12 my-[2px]'>
+                <NavButton
+                    hidden={hidden}
+                    icon={isMobile ? <CloseRoundedIcon /> : hidden ? <MenuRoundedIcon /> : <MenuOpenRoundedIcon />}
+                    label={isMobile ? 'Cerrar' : 'Menú'}
+                    onClick={onToggle}
+                    color='warning'
+                    className='!grow !items-center !justify-start !rounded !text-gray-800 !font-medium hover:!bg-orange-100 hover:!text-orange-600'
+                    classNameHidden='!grow !items-center !justify-center !rounded !text-gray-800 !font-medium hover:!bg-orange-100 hover:!text-orange-600'
+                />
+            </div>
+            <Divider sx={{ bgcolor: '#F97316', height: '2px' }} flexItem />
+            <div className='flex flex-col items-start justify-start flex-1 min-h-0 my-[2px] overflow-y-auto'>
+                <NavLinks hidden={hidden} role={role} onNavigate={onNavigate} />
+            </div>
+            <Divider sx={{ bgcolor: '#F97316', height: '2px' }} flexItem />
+            <div className='flex shrink-0 h-12 my-[2px]'>
+                <NavButton
+                    hidden={hidden}
+                    icon={<LogoutRoundedIcon />}
+                    label='Salir'
+                    onClick={onLogout}
+                    color='error'
+                    className='!grow !items-center !justify-start !rounded !text-red-600 !font-medium hover:!bg-red-100 hover:!text-red-600'
+                    classNameHidden='!grow !items-center !justify-center !rounded !text-red-600 !font-medium hover:!bg-red-100 hover:!text-red-600'
+                />
+            </div>
+        </div>
+    );
+};
+
 export default function Nav({ role }: { role: 'Administrativo' | 'Recursos Humanos' | 'Administrador' }) {
-    const { hidden, toggleDrawer } = useDrawer();
+    const { hidden, toggleDrawer, mobileOpen, closeMobile } = useDrawer();
+
+    const handleLogout = async () => {
+        await doLogout();
+        window.location.href = '/';
+    };
 
     return (
-        <Drawer
-            anchor='left'
-            open={true}
-            variant='persistent'
-            slotProps={{
-                paper: {
-                    sx: {
-                        width: hidden ? '56px' : '196px',
-                        height: 'calc(100vh - 8px)',
-                        border: '2px solid #f97316',
+        <>
+            <Drawer
+                anchor='left'
+                variant='temporary'
+                open={mobileOpen}
+                onClose={closeMobile}
+                ModalProps={{ keepMounted: true }}
+                sx={{
+                    display: 'block',
+                    '@media (min-width: 768px)': { display: 'none' },
+                    '& .MuiDrawer-paper': {
+                        width: '240px',
+                        height: '100vh',
+                        borderRight: '2px solid #f97316',
                         bgcolor: '#FFFFFF',
-                        margin: '4px',
-                        borderRadius: '5px'
+                        borderRadius: '0 5px 5px 0'
                     },
-                },
-            }}
-        >
-            <div className='flex flex-col h-full w-full'>
-                <div className='flex shrink-0 h-12 my-[2px]'>
-                    <NavButton
-                        hidden={hidden}
-                        icon={hidden ? <MenuRoundedIcon /> : <MenuOpenRoundedIcon />}
-                        label='Menú'
-                        onClick={toggleDrawer}
-                        color='warning'
-                        className='!grow !items-center !justify-start !rounded !text-gray-800 !font-medium hover:!bg-orange-100 hover:!text-orange-600'
-                        classNameHidden='!grow !items-center !justify-center !rounded !text-gray-800 !font-medium hover:!bg-orange-100 hover:!text-orange-600'
-                    />
-                </div>
-                <Divider sx={{ bgcolor: '#F97316', height: '2px' }} flexItem />
-                <div className='flex flex-col items-start justify-start flex-1 min-h-0 my-[2px] overflow-y-auto'>
-                    <NavLinks hidden={hidden} role={role} />
-                </div>
-                <Divider sx={{ bgcolor: '#F97316', height: '2px' }} flexItem />
-                <div className='flex shrink-0 h-12 my-[2px]'>
-                    <NavButton
-                        hidden={hidden}
-                        icon={<LogoutRoundedIcon />}
-                        label='Salir'
-                        onClick={async () => {
-                            await doLogout();
-                            window.location.href = '/';
-                        }}
-                        color='error'
-                        className='!grow !items-center !justify-start !rounded !text-red-600 !font-medium hover:!bg-red-100 hover:!text-red-600'
-                        classNameHidden='!grow !items-center !justify-center !rounded !text-red-600 !font-medium hover:!bg-red-100 hover:!text-red-600'
-                    />
-                </div>
-            </div>
-        </Drawer>
+                }}
+            >
+                <NavContent
+                    role={role}
+                    hidden={false}
+                    isMobile={true}
+                    onNavigate={closeMobile}
+                    onToggle={closeMobile}
+                    onLogout={handleLogout}
+                />
+            </Drawer>
+
+            <Drawer
+                anchor='left'
+                open={true}
+                variant='persistent'
+                sx={{
+                    display: 'none',
+                    '@media (min-width: 768px)': { display: 'block' },
+                }}
+                slotProps={{
+                    paper: {
+                        sx: {
+                            width: hidden ? '56px' : '196px',
+                            height: 'calc(100vh - 8px)',
+                            border: '2px solid #f97316',
+                            bgcolor: '#FFFFFF',
+                            margin: '4px',
+                            borderRadius: '5px',
+                        },
+                    },
+                }}
+            >
+                <NavContent
+                    role={role}
+                    hidden={hidden}
+                    isMobile={false}
+                    onToggle={toggleDrawer}
+                    onLogout={handleLogout}
+                />
+            </Drawer>
+        </>
     );
 };

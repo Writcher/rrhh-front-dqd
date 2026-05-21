@@ -111,7 +111,7 @@ export default function EmpleadosJornadasInnerTable({
                         }
                     />
                     {/** Table */}
-                    <div className='flex flex-col lg:flex-2 flex-1 gap-2 overflow-hidden'>
+                    <div className='flex flex-col lg:flex-2 flex-1 min-h-0 gap-2 overflow-hidden'>
                         {tab.tab === 'jornadas'
                             ? (
                                 <EmpleadosJornadasInnerTableJornadasTab

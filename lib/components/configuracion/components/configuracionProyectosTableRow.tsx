@@ -77,7 +77,7 @@ export default function ConfiguracionProyectosTableRow({
     });
     return (
         <TableRow>
-            <TableRowCell alignment='left'>
+            <TableRowCell alignment='left' label='Nombre'>
                 {show.show ? (
                     <ControlledTextField
                         control={control}
@@ -89,7 +89,7 @@ export default function ConfiguracionProyectosTableRow({
                     proyecto.nombre
                 )}
             </TableRowCell>
-            <TableRowCell alignment='center'>
+            <TableRowCell alignment='center' label='Nómina'>
                 {show.show ? (
                     <ControlledTextField
                         control={control}
@@ -101,7 +101,7 @@ export default function ConfiguracionProyectosTableRow({
                     proyecto.nomina
                 )}
             </TableRowCell>
-            <TableRowCell alignment='center'>
+            <TableRowCell alignment='center' label='Mod. Trabajo'>
                 {show.show ? (
                     <ControlledSelect
                         control={control}
@@ -115,7 +115,7 @@ export default function ConfiguracionProyectosTableRow({
                     proyecto.modalidadtrabajo
                 )}
             </TableRowCell>
-            <TableRowCell alignment='center'>
+            <TableRowCell alignment='center' label='Mod. Importación'>
                 {show.show ? (
                     <ControlledSelect
                         control={control}
@@ -129,7 +129,7 @@ export default function ConfiguracionProyectosTableRow({
                     proyecto.modalidadimportacion
                 )}
             </TableRowCell>
-            <TableRowCell alignment='center'>
+            <TableRowCell alignment='center' label='Estado'>
                 <Chip
                     label={proyecto.estadoparametro}
                     className='!rounded'

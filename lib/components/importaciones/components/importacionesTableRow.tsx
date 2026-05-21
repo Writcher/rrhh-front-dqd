@@ -34,16 +34,16 @@ export default function ImportacionesTableRow({
     });
     return (
         <TableRow>
-            <TableRowCell alignment='left'>
+            <TableRowCell alignment='left' label='Nombre'>
                 {importacion.nombre}
             </TableRowCell>
-            <TableRowCell alignment='center'>
+            <TableRowCell alignment='center' label='Proyecto'>
                 {importacion.nombreproyecto}
             </TableRowCell>
-            <TableRowCell alignment='center'>
+            <TableRowCell alignment='center' label='Usuario'>
                 {importacion.nombreusuario}
             </TableRowCell>
-            <TableRowCell alignment={`${(isAdministrativo || isAdministrador) ? 'center' : 'right'}`}>
+            <TableRowCell alignment={`${(isAdministrativo || isAdministrador) ? 'center' : 'right'}`} label='Estado'>
                 <Chip
                     label={importacion.nombreestado}
                     className='!rounded'

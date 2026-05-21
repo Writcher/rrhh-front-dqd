@@ -68,7 +68,7 @@ export default function ConfiguracionControlesTableRow({
     const getNombreProyecto = useMemo(() => getNombreById(proyectos), [proyectos]);
     return (
         <TableRow>
-            <TableRowCell alignment='left'>
+            <TableRowCell alignment='left' label='Serie'>
                 {show.show ? (
                     <ControlledTextField
                         control={formControl}
@@ -80,7 +80,7 @@ export default function ConfiguracionControlesTableRow({
                     control.serie
                 )}
             </TableRowCell>
-            <TableRowCell alignment='center'>
+            <TableRowCell alignment='center' label='Proyecto'>
                 {show.show ? (
                     <ControlledSelect
                         control={formControl}

@@ -10,10 +10,10 @@ export default function EmpleadosJornadasInnerTableObservacionesRow({
 }) {
     return (
         <TableRow>
-            <TableRowCell alignment='left'>
+            <TableRowCell alignment='left' label='Fecha'>
                 {formatFechaDiaSemana(observacion.fecha)}
             </TableRowCell>
-            <TableRowCell alignment='center'>
+            <TableRowCell alignment='center' label='Observación'>
                 {observacion.texto}
             </TableRowCell>
         </TableRow>

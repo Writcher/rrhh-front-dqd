@@ -22,7 +22,7 @@ export default function TableWrapper({
     children?: React.ReactNode
 }) {
     return (
-        <div className={`flex flex-col flex-1 w-full min-h-0 rounded overflow-hidden${bordered ? ' border-2 border-orange-500' : ''}`}>
+        <div className={`flex flex-col ${paginated ? 'flex-1' : 'flex-none'} w-full min-h-0 rounded overflow-hidden${bordered ? ' border-2 border-orange-500' : ''}`}>
             {children}
             {paginated && (isLoading || (total ?? 0) > 0) &&
                 <div className='flex shrink-0 justify-end items-center border-t-2 border-orange-500'>
@@ -38,6 +38,37 @@ export default function TableWrapper({
                         labelDisplayedRows={({ from, to, count }) =>
                             `${from}-${to} de ${count !== -1 ? count : `más de ${to}`}`
                         }
+                        sx={{
+                            '@media (max-width: 767px)': {
+                                '& .MuiToolbar-root': {
+                                    paddingLeft: '4px',
+                                    paddingRight: '0px',
+                                    minHeight: '40px',
+                                    height: '40px',
+                                    flexWrap: 'nowrap',
+                                    justifyContent: 'center',
+                                    gap: '0px',
+                                },
+                                '& .MuiTablePagination-selectLabel': {
+                                    display: 'none',
+                                },
+                                '& .MuiTablePagination-input': {
+                                    marginRight: '4px',
+                                    marginLeft: '0px',
+                                    fontSize: '0.75rem',
+                                },
+                                '& .MuiTablePagination-displayedRows': {
+                                    fontSize: '0.75rem',
+                                    margin: 0,
+                                },
+                                '& .MuiTablePagination-actions': {
+                                    marginLeft: '4px',
+                                },
+                                '& .MuiTablePagination-actions .MuiIconButton-root': {
+                                    padding: '2px',
+                                },
+                            },
+                        }}
                         slotProps={{
                             select: {
                                 MenuProps: {

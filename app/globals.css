@@ -3,7 +3,98 @@
   .outer-table-container .MuiTableHead-root .MuiTableCell-root {
     z-index: 1100 !important;
   }
-  
+
   .inner-table-container .MuiTableHead-root .MuiTableCell-root {
     z-index: 1000 !important;
-  } 
+  }
+
+  @media (max-width: 767px) {
+    .responsive-table table,
+    .responsive-table thead,
+    .responsive-table tbody,
+    .responsive-table tr {
+      display: block !important;
+      width: 100% !important;
+    }
+
+    .responsive-table thead {
+      position: absolute !important;
+      top: -9999px !important;
+      left: -9999px !important;
+    }
+
+    .responsive-table tbody {
+      padding: 8px !important;
+    }
+
+    .responsive-table tbody tr {
+      border: 2px solid #6b7280 !important;
+      border-radius: 6px !important;
+      margin-bottom: 8px !important;
+      padding: 4px 8px !important;
+      background-color: #fff !important;
+    }
+
+    .responsive-table tbody tr:last-child {
+      margin-bottom: 0 !important;
+    }
+
+    .responsive-table tbody td {
+      display: flex !important;
+      border: none !important;
+      padding: 6px 0 !important;
+      text-align: left !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 12px !important;
+      min-height: 32px !important;
+      width: 100% !important;
+    }
+
+    .responsive-table tbody td[data-label]:not([data-label=""])::before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: #374151;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      flex-shrink: 0;
+    }
+
+    .responsive-table tbody td > div {
+      text-align: right;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .responsive-table tbody td[data-label=""],
+    .responsive-table tbody td:not([data-label]) {
+      justify-content: center !important;
+    }
+
+    .responsive-table tbody td[data-label=""] > div,
+    .responsive-table tbody td:not([data-label]) > div {
+      width: 100% !important;
+      justify-content: center !important;
+      text-align: center !important;
+    }
+
+    .responsive-table tbody td[data-label=""] .MuiBox-root,
+    .responsive-table tbody td:not([data-label]) .MuiBox-root {
+      flex: 1 !important;
+      justify-content: center !important;
+    }
+
+    .responsive-table tbody td[data-label=""] .MuiButton-root,
+    .responsive-table tbody td:not([data-label]) .MuiButton-root {
+      flex: 1 !important;
+      min-width: 0 !important;
+    }
+
+    .responsive-table.inner-table-container,
+    .responsive-table.outer-table-container {
+      flex: 1 1 0% !important;
+      min-height: 0 !important;
+      overflow-y: auto !important;
+    }
+  }

@@ -7,7 +7,8 @@ export function TableBase({
     skeleton,
     body,
     noItemMessage,
-    containerClassName
+    containerClassName,
+    responsive = true
 }: {
     items: unknown[] | null | undefined,
     isLoading: boolean,
@@ -15,12 +16,13 @@ export function TableBase({
     skeleton: React.ReactNode,
     body: React.ReactNode,
     noItemMessage: string,
-    containerClassName: string
+    containerClassName: string,
+    responsive?: boolean
 }) {
     return (
         <>
             {isLoading || (items && items.length > 0) ? (
-                <TableContainer className={containerClassName}>
+                <TableContainer className={`${responsive ? 'responsive-table ' : ''}${containerClassName}`}>
                     <Table stickyHeader>
                         {header}
                         {isLoading ? skeleton : body}

@@ -7,7 +7,8 @@ export function TableRowCell({
     children,
     highlight,
     color,
-    position
+    position,
+    label
 }: {
     alignment: 'center' | 'left' | 'right' | 'inherit' | 'justify',
     variant?: 'buttons' | 'text' | 'table',
@@ -15,7 +16,8 @@ export function TableRowCell({
     children: React.ReactNode,
     highlight?: 'warning' | 'error' | 'success',
     color?: 'green' | 'gray',
-    position?: 'first' | 'last'
+    position?: 'first' | 'last',
+    label?: string
 }) {
     let divClassName = 'text-gray-700 font-medium';
     if (variant === 'buttons') divClassName = 'flex items-center justify-end text-gray-700 font-medium';
@@ -29,7 +31,7 @@ export function TableRowCell({
     if (position === 'first') cellClassName += ' bg-gradient-to-r';
     if (position === 'last') cellClassName += ' bg-gradient-to-l';
     return (
-        <TableCell align={alignment} colSpan={span} size='small' className={cellClassName}>
+        <TableCell align={alignment} colSpan={span} size='small' className={cellClassName} data-label={label}>
             <div className={divClassName}>
                 {children}
             </div>

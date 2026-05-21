@@ -143,15 +143,15 @@ export default function CompletarTableRow({
     const revision = jornada.estadojornada.toLowerCase() === 'requiere revision';
     return (
         <TableRow>
-            <TableRowCell alignment='left'>
+            <TableRowCell alignment='left' label='Estado'>
                 {jornada.ausencia ? 'Ausente' : 'Presente'}
             </TableRowCell>
-            <TableRowCell alignment='center'>
+            <TableRowCell alignment='center' label='Empleado'>
                 {jornada.nombreempleado}
             </TableRowCell>
             {!jornada.ausencia && !show.show &&
                 <>
-                    <TableRowCell alignment='center'>
+                    <TableRowCell alignment='center' label='Entrada'>
                         <ControlledTimePicker
                             control={control}
                             name='entrada'
@@ -160,7 +160,7 @@ export default function CompletarTableRow({
                             label='Entrada'
                         />
                     </TableRowCell>
-                    <TableRowCell alignment='center'>
+                    <TableRowCell alignment='center' label='Salida'>
                         <ControlledTimePicker
                             control={control}
                             name='salida'
@@ -172,7 +172,7 @@ export default function CompletarTableRow({
                 </>
             }
             {jornada.ausencia && !show.show &&
-                <TableRowCell alignment='center' span={2}>
+                <TableRowCell alignment='center' span={2} label='Tipo Ausencia'>
                     <ControlledSelect
                         control={control}
                         name='id_tipoausencia'
@@ -184,7 +184,7 @@ export default function CompletarTableRow({
                 </TableRowCell>
             }
             {show.show &&
-                <TableRowCell alignment='center' span={2}>
+                <TableRowCell alignment='center' span={2} label='Observación'>
                     <ControlledTextField
                         control={control}
                         name='observacion'
