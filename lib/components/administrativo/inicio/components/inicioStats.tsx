@@ -39,7 +39,7 @@ export function InicioStats({
                     component={Link}
                     href={`/administrativo/empleados/asistencia?id_proyecto=${proyecto}`}
                     variant='contained'
-                    className='!bg-gray-800 !text-white !border-gray-800 hover:!bg-white hover:!text-orange-600 !border-2 hover:!border-orange-500'
+                    className='!bg-gray-800 !text-white !border-gray-800 hover:!bg-orange-100 hover:!text-orange-600 !border-2 hover:!border-orange-500'
                     disableElevation
                     fullWidth
                     endIcon={<NumbersRoundedIcon />}
@@ -53,7 +53,7 @@ export function InicioStats({
                     component={Link}
                     href={`/administrativo/ausencias?id_proyecto=${proyecto}&id_tipoausencia=3`}
                     variant='contained'
-                    className='!bg-gray-800 !text-white !border-gray-800 hover:!bg-white hover:!text-orange-600 !border-2 hover:!border-orange-500'
+                    className='!bg-gray-800 !text-white !border-gray-800 hover:!bg-orange-100 hover:!text-orange-600 !border-2 hover:!border-orange-500'
                     disableElevation
                     fullWidth
                     endIcon={<SummarizeRoundedIcon />}
@@ -65,7 +65,7 @@ export function InicioStats({
                     component={Link}
                     href={`/administrativo/importaciones?id_proyecto=${proyecto}&incompletas=true`}
                     variant='contained'
-                    className='!bg-gray-800 !text-white !border-gray-800 hover:!bg-white hover:!text-orange-600 !border-2 hover:!border-orange-500'
+                    className='!bg-gray-800 !text-white !border-gray-800 hover:!bg-orange-100 hover:!text-orange-600 !border-2 hover:!border-orange-500'
                     disableElevation
                     fullWidth
                     endIcon={<SearchIcon />}
