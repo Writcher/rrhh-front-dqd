@@ -17,7 +17,7 @@ export async function getToken() {
             tipoUsuario: session.user.tipoUsuario,
             exp: Math.floor(Date.now() / 1000) + (60 * 60)
         },
-        process.env.AUTH_SECRET!
+        process.env.JWT_SECRET!
     );
 
     return token;
