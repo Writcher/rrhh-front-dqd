@@ -69,7 +69,7 @@ export default function EmpleadosJornadasInnerTableResumenTab({
                     isLoading={resumen.isLoading}
                     header={
                         <TableHeader
-                            titles={isMensual
+                            titles={!isMensual
                                 ? [
                                     { title: 'Total', width: '15%', alignment: 'center' },
                                     { title: 'Total Normal', width: '15%', alignment: 'center' },
@@ -88,7 +88,7 @@ export default function EmpleadosJornadasInnerTableResumenTab({
                     skeleton={
                         <TableSkeleton
                             rows={1}
-                            columns={isMensual
+                            columns={!isMensual
                                 ? [
                                     { variant: 'text', colWidth: '15%', alignment: 'center', width: 75 },
                                     { variant: 'text', colWidth: '15%', alignment: 'center', width: 75 },

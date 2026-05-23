@@ -13,7 +13,7 @@ export default function EmpleadosJornadasInnerTableResumenRow({
 }) {
     return (
         <>
-            {isMensual 
+            {!isMensual 
             ? (
                     <TableRow>
                         <TableRowCell alignment='center'>
