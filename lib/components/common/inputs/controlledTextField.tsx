@@ -23,7 +23,8 @@ export function ControlledTextField<T extends FieldValues>({
     disabled,
     type,
     multiline,
-    rows
+    rows,
+    shouldUnregister
 }: {
     control: Control<T>,
     name: Path<T>,
@@ -33,13 +34,15 @@ export function ControlledTextField<T extends FieldValues>({
     disabled?: boolean,
     type?: HTMLInputTypeAttribute,
     multiline?: boolean,
-    rows?: number
+    rows?: number,
+    shouldUnregister?: boolean
 }) {
     return (
         <Controller
             name={name}
             control={control}
             rules={rules}
+            shouldUnregister={shouldUnregister}
             render={({ field, fieldState: { error } }) => (
                 <TextField
                     {...field}

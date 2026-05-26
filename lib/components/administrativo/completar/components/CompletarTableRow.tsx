@@ -191,6 +191,7 @@ export default function CompletarTableRow({
                         rules={{ required: 'Debe ingresar la observacion' }}
                         disabled={create.isPending}
                         label='Observación'
+                        shouldUnregister
                     />
                 </TableRowCell>
             }
