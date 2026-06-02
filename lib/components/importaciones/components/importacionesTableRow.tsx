@@ -20,7 +20,7 @@ export default function ImportacionesTableRow({
     const queryClient = useQueryClient();
     //hooks
     const { showSuccess, showError } = useSnackbar();
-    const { isAdministrativo, isAdministrador } = useUserRole();
+    const { isAdministrador, isRRHH } = useUserRole();
     //mutacion
     const remove = useMutation({
         mutationFn: (data: { id: number }) => deleteImportacion(data),
@@ -43,7 +43,7 @@ export default function ImportacionesTableRow({
             <TableRowCell alignment='center'>
                 {importacion.nombreusuario}
             </TableRowCell>
-            <TableRowCell alignment={`${(isAdministrativo || isAdministrador) ? 'center' : 'right'}`}>
+            <TableRowCell alignment={`${(isRRHH || isAdministrador) ? 'center' : 'right'}`}>
                 <Chip
                     label={importacion.nombreestado}
                     className='!rounded'
@@ -52,13 +52,13 @@ export default function ImportacionesTableRow({
                     }
                 />
             </TableRowCell>
-            {(isAdministrativo || isAdministrador) &&
+            {(isRRHH || isAdministrador) &&
                 <TableRowCell alignment='right' variant='buttons'>
                     <Box sx={{ display: 'flex' }}>
                         <LightTooltip title='Revisar' placement='left' arrow>
                             <Button
                                 component={Link}
-                                href={isAdministrativo ? `/administrativo/importacion/${importacion.id}/completar` : `/administrador/importacion/${importacion.id}/completar`}
+                                href={isRRHH ? `/rrhh/importacion/${importacion.id}/completar` : `/administrador/importacion/${importacion.id}/completar`}
                                 variant='contained'
                                 color='success'
                                 disableElevation
