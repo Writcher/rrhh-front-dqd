@@ -1,8 +1,9 @@
 import { Button, SxProps, Theme } from '@mui/material';
-import { ReactNode } from 'react';
+import { ElementType, ReactNode } from 'react';
 import SyncIcon from '@mui/icons-material/Sync';
 import LightTooltip from './tooltip';
 import { useConfirm } from '@/lib/hooks/useConfirm';
+import Link from 'next/link';
 
 type Position = 'first' | 'middle' | 'last' | 'only';
 type Color = 'success' | 'error' | 'info' | 'warning' | 'primary' | 'secondary';
@@ -20,6 +21,8 @@ export const TableActionButton = ({
     icon,
     color,
     onClick,
+    href,
+    component,
     loading,
     disabled,
     position = 'middle'
@@ -28,13 +31,17 @@ export const TableActionButton = ({
     confirmTooltip?: string,
     icon: ReactNode,
     color: Color,
-    onClick: () => void,
+    onClick?: () => void,
+    href?: string,
+    component?: ElementType
     loading?: boolean,
     disabled?: boolean,
     position?: Position
 }) => {
     const { confirm, handleConfirm } = useConfirm();
     const requiresConfirm = Boolean(confirmTooltip);
+
+    const linkProps = component ? { component, href } : {};
 
     return (
         <LightTooltip
@@ -44,6 +51,7 @@ export const TableActionButton = ({
         >
             <Button
                 variant={requiresConfirm && !confirm ? 'outlined' : 'contained'}
+                {...linkProps}
                 color={color}
                 disableElevation
                 size='small'
