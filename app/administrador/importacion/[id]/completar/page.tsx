@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
-import Completar from "@/lib/components/administrativo/completar";
 import PageWrapper from "@/lib/components/common/wrappers/pageWrapper";
+import Completar from "@/lib/components/completar";
 import { redirect } from "next/navigation";
 
 export default async function AdministradorCompletarPage({ 
