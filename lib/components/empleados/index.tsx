@@ -181,9 +181,10 @@ export default function Empleados() {
                                     { title: 'Legajo', width: '10%', alignment: 'left', column: 'legajo', onClick: () => sort.handleSort('legajo') },
                                     { title: 'DNI', width: '10%', alignment: 'center', column: 'dni', onClick: () => sort.handleSort('dni') },
                                     { title: 'Nombre y Apellido', width: '20%', alignment: 'center', column: 'nombre', onClick: () => sort.handleSort('nombre') },
-                                    { title: 'Tipo de Empleado', width: '15%', alignment: 'center', column: 'id_tipoempleado', onClick: () => sort.handleSort('id_tipoempleado') },
+                                    { title: 'Tipo de Empleado', width: '10%', alignment: 'center', column: 'id_tipoempleado', onClick: () => sort.handleSort('id_tipoempleado') },
                                     { title: 'Validacion', width: '10%', alignment: 'center', column: 'id_modalidadvalidacion', onClick: () => sort.handleSort('id_modalidadvalidacion') },
-                                    { title: 'Proyecto', width: '15%', alignment: 'center', column: 'id_proyecto', onClick: () => sort.handleSort('id_proyecto') },
+                                    { title: 'Puesto', width: '10%', alignment: 'center', column: 'puesto', onClick: () => sort.handleSort('puesto') },
+                                    { title: 'Proyecto', width: '10%', alignment: 'center', column: 'id_proyecto', onClick: () => sort.handleSort('id_proyecto') },
                                     { title: 'Estado', width: '10%', alignment: 'center', column: 'id_estadoempleado', onClick: () => sort.handleSort('id_estadoempleado') },
                                     { title: 'Acciones', width: '10%', alignment: 'right' }
                                 ]}
@@ -198,9 +199,10 @@ export default function Empleados() {
                                     { variant: 'text', alignment: 'left', colWidth: '10%', width: 75 },
                                     { variant: 'text', alignment: 'center', colWidth: '10%', width: 75 },
                                     { variant: 'text', alignment: 'center', colWidth: '20%', width: 200 },
-                                    { variant: 'text', alignment: 'center', colWidth: '15%', width: 100 },
                                     { variant: 'text', alignment: 'center', colWidth: '10%', width: 100 },
-                                    { variant: 'text', alignment: 'center', colWidth: '15%', width: 100 },
+                                    { variant: 'text', alignment: 'center', colWidth: '10%', width: 100 },
+                                    { variant: 'text', alignment: 'center', colWidth: '10%', width: 100 },
+                                    { variant: 'text', alignment: 'center', colWidth: '10%', width: 100 },
                                     { variant: 'rectangular', alignment: 'center', colWidth: '10%', width: 100 },
                                     { variant: 'rectangular', alignment: 'right', colWidth: '10%', width: 120 }
                                 ]}

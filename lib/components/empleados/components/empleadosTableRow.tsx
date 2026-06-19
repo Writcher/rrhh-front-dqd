@@ -90,6 +90,9 @@ export default function EmpleadosTableRow({
                 )}
             </TableRowCell>
             <TableRowCell alignment='center'>
+                {empleado.puesto}
+            </TableRowCell>
+            <TableRowCell alignment='center'>
                 {empleado.nombreproyecto}
             </TableRowCell>
             <TableRowCell alignment='center'>

@@ -12,6 +12,7 @@ export type EmpleadoItemDto = {
     id_modalidadvalidacion: number;
     modalidadvalidacion: string;
     es_mensualizado: boolean;
+    puesto: string;
 };
 
 export type EmpleadosResponseDto = {
