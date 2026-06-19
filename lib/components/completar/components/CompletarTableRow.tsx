@@ -20,6 +20,7 @@ import VerifiedUserRoundedIcon from '@mui/icons-material/VerifiedUserRounded';
 import { TableTooltip } from "@/lib/components/common/components/tableTooltip";
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { TableActionButton } from "@/lib/components/common/components/tableActionButton";
+import { useUserRole } from "@/lib/hooks/useUserRole";
 
 export default function CompletarTableRow({
     jornada,
@@ -41,6 +42,7 @@ export default function CompletarTableRow({
             observacion: ''
         }
     });
+    const { isAdministrativo } = useUserRole();
     //mutations
     const edit = useMutation({
         mutationFn: (data: {
@@ -272,31 +274,36 @@ export default function CompletarTableRow({
                                         id_tipoausencia: data.id_tipoausencia
                                     }))
                                 }
+                                position={isAdministrativo ? 'last' : 'middle'}
                             />
-                            <TableActionButton
-                                tooltip='¿Borrar?'
-                                confirmTooltip='Confirmar'
-                                icon={<DeleteForeverRoundedIcon />}
-                                color='error'
-                                loading={removeJornada.isPending}
-                                disabled={edit.isPending || removeJornada.isPending || validate.isPending || validada}
-                                onClick={() => removeJornada.mutate({ id: jornada.id })}
-                            />
-                            <TableActionButton
-                                tooltip='¿Validar?'
-                                confirmTooltip='Confirmar'
-                                icon={<VerifiedUserRoundedIcon />}
-                                color='success'
-                                loading={validate.isPending}
-                                disabled={edit.isPending || removeJornada.isPending || validate.isPending || !isValid || validada}
-                                onClick={handleSubmit((data) => validate.mutate({
-                                    id: jornada.id,
-                                    entrada: data.entrada,
-                                    salida: data.salida,
-                                    id_tipoausencia: data.id_tipoausencia
-                                }))}
-                                position='last'
-                            />
+                            {!isAdministrativo &&
+                                <>
+                                    <TableActionButton
+                                        tooltip='¿Borrar?'
+                                        confirmTooltip='Confirmar'
+                                        icon={<DeleteForeverRoundedIcon />}
+                                        color='error'
+                                        loading={removeJornada.isPending}
+                                        disabled={edit.isPending || removeJornada.isPending || validate.isPending || validada}
+                                        onClick={() => removeJornada.mutate({ id: jornada.id })}
+                                    />
+                                    <TableActionButton
+                                        tooltip='¿Validar?'
+                                        confirmTooltip='Confirmar'
+                                        icon={<VerifiedUserRoundedIcon />}
+                                        color='success'
+                                        loading={validate.isPending}
+                                        disabled={edit.isPending || removeJornada.isPending || validate.isPending || !isValid || validada}
+                                        onClick={handleSubmit((data) => validate.mutate({
+                                            id: jornada.id,
+                                            entrada: data.entrada,
+                                            salida: data.salida,
+                                            id_tipoausencia: data.id_tipoausencia
+                                        }))}
+                                        position='last'
+                                    />
+                                </>
+                            }
                         </>
                     )}
                 </Box>

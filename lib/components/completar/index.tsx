@@ -12,13 +12,14 @@ import SyncIcon from '@mui/icons-material/Sync';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { useRouter } from "next/navigation";
 import { setImportacionCompleta } from "@/lib/actions/importacion/importacion.actions";
-import TableWrapper from "../../common/wrappers/tableWrapper";
-import { Button, TableBody } from "@mui/material";
-import { TableSkeleton } from "../../common/tables/tableSkeleton";
-import { TableHeader } from "../../common/tables/tableHeader";
-import { TableBase } from "../../common/tables/tableBase";
 import { JornadasImportacionItemDto } from "@/lib/types/jornada/get-jornada-importacion";
 import CompletarTableRow from "./components/CompletarTableRow";
+import TableWrapper from "../common/wrappers/tableWrapper";
+import { TableBase } from "../common/tables/tableBase";
+import { TableHeader } from "../common/tables/tableHeader";
+import { TableSkeleton } from "../common/tables/tableSkeleton";
+import { Button, TableBody } from "@mui/material";
+import { useUserRole } from "@/lib/hooks/useUserRole";
 
 export default function Completar({
     id_importacion
@@ -31,6 +32,7 @@ export default function Completar({
     //hooks
     const { showSuccess, showError, showWarning } = useSnackbar();
     const pagination = usePagination({ limit: 25 });
+    const { isAdministrativo } = useUserRole();
     //query
     const tiposAusencia = useQuery({
         queryKey: ['getTiposAusencia'],
@@ -86,7 +88,7 @@ export default function Completar({
                         header={
                             <TableHeader
                                 titles={[
-                                    { title: 'Tipo', width: '10%', alignment: 'left'},
+                                    { title: 'Tipo', width: '10%', alignment: 'left' },
                                     { title: 'Nombre de Empleado', width: '35%', alignment: 'center' },
                                     { title: 'Entrada y Salida / Tipo de Ausencia', width: '30%', alignment: 'center', span: 2 },
                                     { title: 'Acciones', width: '25%', alignment: 'right' }
@@ -131,20 +133,22 @@ export default function Completar({
                 >
                     Volver
                 </Button>
-                <Button
-                    variant='contained'
-                    color='success'
-                    disableElevation
-                    onClick={() => complete.mutate({ id: id_importacion })}
-                    endIcon={
-                        complete.isPending
-                            ? <SyncIcon className='animate-spin' style={{ animationDirection: 'reverse' }} />
-                            : <SaveAsRoundedIcon />
-                    }
-                    disabled={complete.isPending || jornadas.isLoading || disabled}
-                >
-                    {complete.isPending ? 'Confirmando' : 'Confirmar'}
-                </Button>
+                {!isAdministrativo &&
+                    <Button
+                        variant='contained'
+                        color='success'
+                        disableElevation
+                        onClick={() => complete.mutate({ id: id_importacion })}
+                        endIcon={
+                            complete.isPending
+                                ? <SyncIcon className='animate-spin' style={{ animationDirection: 'reverse' }} />
+                                : <SaveAsRoundedIcon />
+                        }
+                        disabled={complete.isPending || jornadas.isLoading || disabled}
+                    >
+                        {complete.isPending ? 'Confirmando' : 'Confirmar'}
+                    </Button>
+                }
             </div>
         </div>
     )
