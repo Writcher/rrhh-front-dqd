@@ -20,7 +20,7 @@ export default function ImportacionesTableRow({
     const queryClient = useQueryClient();
     //hooks
     const { showSuccess, showError } = useSnackbar();
-    const { isAdministrador, isRRHH } = useUserRole();
+    const { isAdministrador, isRRHH, isAdministrativo } = useUserRole();
     //mutacion
     const remove = useMutation({
         mutationFn: (data: { id: number }) => deleteImportacion(data),
@@ -52,23 +52,17 @@ export default function ImportacionesTableRow({
                     }
                 />
             </TableRowCell>
-            {(isRRHH || isAdministrador) &&
                 <TableRowCell alignment='right' variant='buttons'>
                     <Box sx={{ display: 'flex' }}>
-                        <LightTooltip title='Revisar' placement='left' arrow>
-                            <Button
-                                component={Link}
-                                href={isRRHH ? `/rrhh/importacion/${importacion.id}/completar` : `/administrador/importacion/${importacion.id}/completar`}
-                                variant='contained'
-                                color='success'
-                                disableElevation
-                                size='small'
-                                disabled={remove.isPending || importacion.nombreestado.toLowerCase() === 'completa'}
-                                sx={{ borderRadius: '4px 0 0 4px' }}
-                            >
-                                <EditNoteRoundedIcon />
-                            </Button>
-                        </LightTooltip>
+                        <TableActionButton
+                            tooltip='Revisar'
+                            component={Link}
+                            href={isRRHH ? `/rrhh/importacion/${importacion.id}/completar` : isAdministrador ? `/administrador/importacion/${importacion.id}/completar` : `/administrativo/importacion/${importacion.id}/completar`}
+                            icon={<EditNoteRoundedIcon />}
+                            color='success'
+                            position={isAdministrativo ? 'only' : 'first'}
+                        />
+                         {(isRRHH || isAdministrador) &&
                         <TableActionButton
                             tooltip='¿Borrar?'
                             confirmTooltip='Confirmar'
@@ -79,9 +73,9 @@ export default function ImportacionesTableRow({
                             onClick={() => remove.mutate({ id: importacion.id })}
                             position='last'
                         />
+                        }
                     </Box>
                 </TableRowCell>
-            }
         </TableRow>
     )
 };
