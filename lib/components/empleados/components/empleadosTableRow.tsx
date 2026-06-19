@@ -15,6 +15,7 @@ import SaveAsRoundedIcon from '@mui/icons-material/SaveAsRounded';
 import { useEffect } from "react";
 import { ControlledSelect } from "../../common/inputs/controlledSelect";
 import { TableActionButton } from "@/lib/components/common/components/tableActionButton";
+import { useUserRole } from "@/lib/hooks/useUserRole";
 
 export default function EmpleadosTableRow({
     empleado,
@@ -33,6 +34,7 @@ export default function EmpleadosTableRow({
         }
     });
     const show = useShow();
+    const { isAdministrativo } = useUserRole();
     //mutacion
     const edit = useMutation({
         mutationFn: (data: { id_mdoalidadvalidacion: number, id: number }) => editEmpleado(data),
@@ -100,55 +102,57 @@ export default function EmpleadosTableRow({
                 />
             </TableRowCell>
             <TableRowCell alignment='right' variant='buttons'>
-                <Box sx={{ display: 'flex' }}>
-                    {show.show ? (
-                        <>
-                            <TableActionButton
-                                tooltip='Guardar'
-                                icon={<SaveAsRoundedIcon />}
-                                color='success'
-                                loading={edit.isPending}
-                                disabled={edit.isPending || !isValid}
-                                onClick={handleSubmit((data) => edit.mutate({ id_mdoalidadvalidacion: Number(data.id_modalidadvalidacion), id: empleado.id }))}
-                                position='first'
-                            />
-                            <TableActionButton
-                                tooltip='Cancelar'
-                                icon={<CloseRoundedIcon />}
-                                color='error'
-                                loading={edit.isPending}
-                                disabled={edit.isPending}
-                                onClick={() => show.handleShow()}
-                                position='last'
-                            />
-                        </>
-                    ) : (
-                        <>
-                            <TableActionButton
-                                tooltip='Editar'
-                                icon={<EditRoundedIcon />}
-                                color='success'
-                                loading={deactivate.isPending}
-                                disabled={deactivate.isPending || empleado.estadoempleado.toLowerCase() === 'baja'}
-                                onClick={() => {
-                                    show.handleShow();
-                                    reset();
-                                }}
-                                position='first'
-                            />
-                            <TableActionButton
-                                tooltip='¿Dar Baja?'
-                                confirmTooltip='Confirmar'
-                                icon={<PersonRemoveRoundedIcon />}
-                                color='error'
-                                loading={deactivate.isPending}
-                                disabled={deactivate.isPending || empleado.estadoempleado.toLowerCase() === 'baja' || show.show}
-                                onClick={() => deactivate.mutate({ id: empleado.id })}
-                                position='last'
-                            />
-                        </>
-                    )}
-                </Box>
+                {!isAdministrativo &&
+                    <Box sx={{ display: 'flex' }}>
+                        {!show.show ? (
+                            <>
+                                <TableActionButton
+                                    tooltip='Guardar'
+                                    icon={<SaveAsRoundedIcon />}
+                                    color='success'
+                                    loading={edit.isPending}
+                                    disabled={edit.isPending || !isValid}
+                                    onClick={handleSubmit((data) => edit.mutate({ id_mdoalidadvalidacion: Number(data.id_modalidadvalidacion), id: empleado.id }))}
+                                    position='first'
+                                />
+                                <TableActionButton
+                                    tooltip='Cancelar'
+                                    icon={<CloseRoundedIcon />}
+                                    color='error'
+                                    loading={edit.isPending}
+                                    disabled={edit.isPending}
+                                    onClick={() => show.handleShow()}
+                                    position='last'
+                                />
+                            </>
+                        ) : (
+                            <>
+                                <TableActionButton
+                                    tooltip='Editar'
+                                    icon={<EditRoundedIcon />}
+                                    color='success'
+                                    loading={deactivate.isPending}
+                                    disabled={deactivate.isPending || empleado.estadoempleado.toLowerCase() === 'baja'}
+                                    onClick={() => {
+                                        show.handleShow();
+                                        reset();
+                                    }}
+                                    position='first'
+                                />
+                                <TableActionButton
+                                    tooltip='¿Dar Baja?'
+                                    confirmTooltip='Confirmar'
+                                    icon={<PersonRemoveRoundedIcon />}
+                                    color='error'
+                                    loading={deactivate.isPending}
+                                    disabled={deactivate.isPending || empleado.estadoempleado.toLowerCase() === 'baja' || show.show}
+                                    onClick={() => deactivate.mutate({ id: empleado.id })}
+                                    position='last'
+                                />
+                            </>
+                        )}
+                    </Box>
+                }
             </TableRowCell>
         </TableRow>
     );
