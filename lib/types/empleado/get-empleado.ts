@@ -13,6 +13,7 @@ export type EmpleadoItemDto = {
     modalidadvalidacion: string;
     es_mensualizado: boolean;
     puesto: string;
+    estado_acceso: string;
 };
 
 export type EmpleadosResponseDto = {

@@ -13,6 +13,7 @@ export async function getEmpleados(params: {
     id_mes?: number | '',
     quincena?: number | '',
     manual?: boolean,
+    estado_acceso?: string,
     page: number,
     limit: number,
     column: string,
@@ -36,6 +37,7 @@ export async function getEmpleados(params: {
         if (params.legajo !== '') empleadosParams.legajo = params.legajo.toString();
         if (params.id_tipoempleado !== '') empleadosParams.id_tipoempleado = params.id_tipoempleado.toString();
         if (params.id_proyecto !== '') empleadosParams.id_proyecto = params.id_proyecto.toString();
+        if (params.estado_acceso !== undefined && params.estado_acceso !== '') empleadosParams.estado_acceso = params.estado_acceso;
 
         const empleadosURLParams = new URLSearchParams(empleadosParams);
 

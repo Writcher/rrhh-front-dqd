@@ -12,7 +12,7 @@ type FilterBarItem = {
     menuLabel?: string
     inputLabel: string
     inputType: 'text' | 'number' | 'select' | 'datepicker' | 'toggle'
-    options?: { id: number, nombre: string }[]
+    options?: { id: number | string, nombre: string }[]
     value: string | number | boolean
     loading?: boolean
 }

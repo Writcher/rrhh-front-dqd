@@ -5,4 +5,5 @@ export type EmpleadosTableFiltersFormData = {
   legajo: number | '';
   legajoNormal: number | '';
   id_tipoempleado: number | '';
+  estado_acceso: string;
 };

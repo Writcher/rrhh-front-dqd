@@ -12,10 +12,22 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import PersonRemoveRoundedIcon from '@mui/icons-material/PersonRemoveRounded';
 import SaveAsRoundedIcon from '@mui/icons-material/SaveAsRounded';
+import AddAPhotoRoundedIcon from '@mui/icons-material/AddAPhotoRounded';
 import { useEffect } from "react";
 import { ControlledSelect } from "../../common/inputs/controlledSelect";
 import { TableActionButton } from "@/lib/components/common/components/tableActionButton";
 import { useUserRole } from "@/lib/hooks/useUserRole";
+import CargarFotoDialog from "./cargarFotoDialog";
+
+// Color del chip según el estado de sincronización con el control de acceso.
+const accesoColor = (estado: string): 'success' | 'warning' | 'error' | 'default' => {
+    switch (estado) {
+        case 'Sincronizado': return 'success';
+        case 'Pendiente': return 'warning';
+        case 'Error': return 'error';
+        default: return 'default'; // Baja
+    }
+};
 
 export default function EmpleadosTableRow({
     empleado,
@@ -34,6 +46,7 @@ export default function EmpleadosTableRow({
         }
     });
     const show = useShow();
+    const fotoDialog = useShow();
     const { isAdministrativo } = useUserRole();
     //mutacion
     const edit = useMutation({
@@ -64,7 +77,8 @@ export default function EmpleadosTableRow({
         };
     }, [empleado, setValue, show.show])
     return (
-        <TableRow>
+        <>
+            <TableRow>
             <TableRowCell alignment='left'>
                 {empleado.legajo}
             </TableRowCell>
@@ -104,10 +118,17 @@ export default function EmpleadosTableRow({
                     }
                 />
             </TableRowCell>
+            <TableRowCell alignment='center'>
+                <Chip
+                    label={empleado.estado_acceso}
+                    className='!rounded'
+                    color={accesoColor(empleado.estado_acceso)}
+                />
+            </TableRowCell>
             <TableRowCell alignment='right' variant='buttons'>
                 {!isAdministrativo &&
                     <Box sx={{ display: 'flex' }}>
-                        {!show.show ? (
+                        {show.show ? (
                             <>
                                 <TableActionButton
                                     tooltip='Guardar'
@@ -143,6 +164,14 @@ export default function EmpleadosTableRow({
                                     position='first'
                                 />
                                 <TableActionButton
+                                    tooltip={empleado.estado_acceso === 'Sincronizado' ? 'Actualizar foto' : 'Cargar foto / sincronizar'}
+                                    icon={<AddAPhotoRoundedIcon />}
+                                    color='info'
+                                    disabled={empleado.estadoempleado.toLowerCase() === 'baja' || show.show}
+                                    onClick={() => fotoDialog.handleShow()}
+                                    position='middle'
+                                />
+                                <TableActionButton
                                     tooltip='¿Dar Baja?'
                                     confirmTooltip='Confirmar'
                                     icon={<PersonRemoveRoundedIcon />}
@@ -157,6 +186,12 @@ export default function EmpleadosTableRow({
                     </Box>
                 }
             </TableRowCell>
-        </TableRow>
+            </TableRow>
+            <CargarFotoDialog
+                empleado={empleado}
+                open={fotoDialog.show}
+                onClose={fotoDialog.handleShow}
+            />
+        </>
     );
 };

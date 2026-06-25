@@ -2,6 +2,7 @@
 
 import CONFIG from '@/config';
 import { ImportacionesResponseDto } from '@/lib/types/importacion/get-importacion';
+import { GetImportacionByIdResponse } from '@/lib/types/importacion/get-importacion-id';
 import { getToken } from "@/lib/utils/getToken";
 
 export async function getImportacionCountByProyecto(): Promise<number> {
@@ -89,6 +90,34 @@ export async function getImportaciones(params: {
         return await importaciones.json();
     } catch (error) {
         console.error('Get importaciones failed: ', {
+            timestamp: new Date().toISOString(),
+            error: error instanceof Error ? error.message : error,
+            stack: error instanceof Error ? error.stack : undefined
+        });
+
+        throw error;
+    };
+};
+
+export async function getImportacionById(params: {
+    id: number
+}): Promise<GetImportacionByIdResponse> {
+    try {
+        const token = await getToken();
+
+        const importacion = await fetch(`${CONFIG.URL_BASE}${CONFIG.URL_IMPORTACION}/${params.id}`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if (!importacion.ok) throw new Error(`Error getting importacion with id ${params.id}: ${importacion.status} - ${importacion.statusText}`);
+
+        return await importacion.json();
+    } catch (error) {
+        console.error('Get importacion failed: ', {
+            id: params.id,
             timestamp: new Date().toISOString(),
             error: error instanceof Error ? error.message : error,
             stack: error instanceof Error ? error.stack : undefined

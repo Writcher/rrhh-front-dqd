@@ -34,6 +34,7 @@ export default function EmpleadosJornadasTableRow({
                 >
                     <TableRowCell alignment='center' span={3} variant='table'>
                         <EmpleadosJornadasInnerTable
+                            canCreateManually={empleado.modalidadvalidacion === 'Manual'}
                             isMensual={empleado.es_mensualizado}
                             isActive={empleado.estadoempleado != 'baja'}
                             id={empleado.id}

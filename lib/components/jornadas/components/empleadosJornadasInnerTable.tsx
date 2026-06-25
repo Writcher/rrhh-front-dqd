@@ -19,10 +19,12 @@ import JornadaForm from "./jornadaForm";
 import { useUserRole } from "@/lib/hooks/useUserRole";
 
 export default function EmpleadosJornadasInnerTable({
+    canCreateManually,
     isMensual,
     isActive,
     id
 }: {
+    canCreateManually: boolean,
     isMensual: boolean,
     isActive: boolean,
     id: number
@@ -93,7 +95,7 @@ export default function EmpleadosJornadasInnerTable({
                         ]}
                         actions={
                             <>
-                                {(isRRHH || isAdministrador) &&
+                                {(isRRHH || isAdministrador || canCreateManually) &&
                                     <Button
                                         variant='contained'
                                         color='success'

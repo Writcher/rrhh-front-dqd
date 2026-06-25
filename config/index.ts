@@ -17,6 +17,7 @@ export default {
     URL_MES: process.env.URL_MES,
     URL_IMPORTACION: process.env.URL_IMPORTACION,
     URL_CONTROL: process.env.URL_CONTROL,
+    URL_CONTROL_ACCESO: process.env.URL_CONTROL_ACCESO,
     URL_IMPORTAR: process.env.URL_IMPORTAR,
     URL_EXPORTAR: process.env.URL_EXPORTAR,
     URL_ASISTENCIA: process.env.URL_ASISTENCIA,

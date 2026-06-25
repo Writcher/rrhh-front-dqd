@@ -28,6 +28,12 @@ import { EmpleadoItemDto } from "@/lib/types/empleado/get-empleado";
 import EmpleadosTableRow from "./components/empleadosTableRow";
 import { useUserRole } from "@/lib/hooks/useUserRole";
 
+const ESTADO_ACCESO_OPTIONS = [
+    { id: 'Sincronizado', nombre: 'Sincronizado' },
+    { id: 'Pendiente', nombre: 'Pendiente' },
+    { id: 'Baja', nombre: 'Baja' },
+];
+
 export default function Empleados() {
     //hooks
     const { showSuccess, showError, showWarning } = useSnackbar();
@@ -40,18 +46,20 @@ export default function Empleados() {
             legajo: '',
             legajoNormal: '',
             id_tipoempleado: '',
+            estado_acceso: '',
         }
     });
     const filters = useFilters([
         { key: 'nombre', type: 'debounced-text', normalKey: 'nombreNormal', defaultVisible: true },
         { key: 'legajo', type: 'debounced-text', normalKey: 'legajoNormal' },
         { key: 'id_proyecto', type: 'select' },
-        { key: 'id_tipoempleado', type: 'select' }
+        { key: 'id_tipoempleado', type: 'select' },
+        { key: 'estado_acceso', type: 'select' }
     ], { setValue, watch }, { syncUrl: true });
     const sort = useSort({ col: 'nombre' });
     const pagination = usePagination({
         limit: 25,
-        resetKey: `${watch('nombre')}-${watch('legajo')}-${watch('id_proyecto')}-${watch('id_tipoempleado')}-${sort.column}-${sort.direction}`
+        resetKey: `${watch('nombre')}-${watch('legajo')}-${watch('id_proyecto')}-${watch('id_tipoempleado')}-${watch('estado_acceso')}-${sort.column}-${sort.direction}`
     });
     //query
     const proyectos = useQuery({
@@ -79,7 +87,8 @@ export default function Empleados() {
             watch('nombre'),
             watch('id_proyecto'),
             watch('legajo'),
-            watch('id_tipoempleado')
+            watch('id_tipoempleado'),
+            watch('estado_acceso')
         ],
         queryFn: () => getEmpleados({
             page: pagination.page,
@@ -89,7 +98,8 @@ export default function Empleados() {
             nombre: watch('nombre'),
             id_proyecto: watch('id_proyecto'),
             legajo: watch('legajo'),
-            id_tipoempleado: watch('id_tipoempleado')
+            id_tipoempleado: watch('id_tipoempleado'),
+            estado_acceso: watch('estado_acceso')
         }),
         refetchOnWindowFocus: false
     });
@@ -119,6 +129,7 @@ export default function Empleados() {
                     { key: 'legajo', menuLabel: 'Buscar por Legajo', inputLabel: 'Legajo', inputType: 'number', value: watch('legajoNormal') },
                     { key: 'id_proyecto', menuLabel: 'Filtrar por Proyecto', inputLabel: 'Proyecto', inputType: 'select', options: proyectos.data, value: watch('id_proyecto') },
                     { key: 'id_tipoempleado', menuLabel: 'Filtrar por Tipo de Empleado', inputLabel: 'Tipo de Empleado', inputType: 'select', options: tiposEmpleado.data, value: watch('id_tipoempleado') },
+                    { key: 'estado_acceso', menuLabel: 'Filtrar por Acceso', inputLabel: 'Acceso', inputType: 'select', options: ESTADO_ACCESO_OPTIONS, value: watch('estado_acceso') },
                 ]}
                 actions={
                     <>
@@ -159,7 +170,8 @@ export default function Empleados() {
                     { key: 'nombre', variant: 'text' },
                     { key: 'legajo', variant: 'text' },
                     { key: 'id_proyecto', variant: 'select', util: getNombreProyecto },
-                    { key: 'id_tipoempleado', variant: 'select', util: getNombreTipoEmpleado }
+                    { key: 'id_tipoempleado', variant: 'select', util: getNombreTipoEmpleado },
+                    { key: 'estado_acceso', variant: 'text' }
                 ]}
             />
             {/** Tabla */}
@@ -178,15 +190,16 @@ export default function Empleados() {
                         header={
                             <TableHeader
                                 titles={[
-                                    { title: 'Legajo', width: '10%', alignment: 'left', column: 'legajo', onClick: () => sort.handleSort('legajo') },
-                                    { title: 'DNI', width: '10%', alignment: 'center', column: 'dni', onClick: () => sort.handleSort('dni') },
-                                    { title: 'Nombre y Apellido', width: '20%', alignment: 'center', column: 'nombre', onClick: () => sort.handleSort('nombre') },
-                                    { title: 'Tipo de Empleado', width: '10%', alignment: 'center', column: 'id_tipoempleado', onClick: () => sort.handleSort('id_tipoempleado') },
-                                    { title: 'Validacion', width: '10%', alignment: 'center', column: 'id_modalidadvalidacion', onClick: () => sort.handleSort('id_modalidadvalidacion') },
-                                    { title: 'Puesto', width: '10%', alignment: 'center', column: 'puesto', onClick: () => sort.handleSort('puesto') },
-                                    { title: 'Proyecto', width: '10%', alignment: 'center', column: 'id_proyecto', onClick: () => sort.handleSort('id_proyecto') },
-                                    { title: 'Estado', width: '10%', alignment: 'center', column: 'id_estadoempleado', onClick: () => sort.handleSort('id_estadoempleado') },
-                                    { title: 'Acciones', width: '10%', alignment: 'right' }
+                                    { title: 'Legajo', width: '8%', alignment: 'left', column: 'legajo', onClick: () => sort.handleSort('legajo') },
+                                    { title: 'DNI', width: '9%', alignment: 'center', column: 'dni', onClick: () => sort.handleSort('dni') },
+                                    { title: 'Nombre y Apellido', width: '17%', alignment: 'center', column: 'nombre', onClick: () => sort.handleSort('nombre') },
+                                    { title: 'Tipo de Empleado', width: '9%', alignment: 'center', column: 'id_tipoempleado', onClick: () => sort.handleSort('id_tipoempleado') },
+                                    { title: 'Validacion', width: '9%', alignment: 'center', column: 'id_modalidadvalidacion', onClick: () => sort.handleSort('id_modalidadvalidacion') },
+                                    { title: 'Puesto', width: '9%', alignment: 'center', column: 'puesto', onClick: () => sort.handleSort('puesto') },
+                                    { title: 'Proyecto', width: '9%', alignment: 'center', column: 'id_proyecto', onClick: () => sort.handleSort('id_proyecto') },
+                                    { title: 'Estado', width: '9%', alignment: 'center', column: 'id_estadoempleado', onClick: () => sort.handleSort('id_estadoempleado') },
+                                    { title: 'Acceso', width: '10%', alignment: 'center' },
+                                    { title: 'Acciones', width: '11%', alignment: 'right' }
                                 ]}
                                 sortColumn={sort.column}
                                 sortDirection={sort.direction}
@@ -196,15 +209,16 @@ export default function Empleados() {
                             <TableSkeleton
                                 rows={10}
                                 columns={[
-                                    { variant: 'text', alignment: 'left', colWidth: '10%', width: 75 },
-                                    { variant: 'text', alignment: 'center', colWidth: '10%', width: 75 },
-                                    { variant: 'text', alignment: 'center', colWidth: '20%', width: 200 },
-                                    { variant: 'text', alignment: 'center', colWidth: '10%', width: 100 },
-                                    { variant: 'text', alignment: 'center', colWidth: '10%', width: 100 },
-                                    { variant: 'text', alignment: 'center', colWidth: '10%', width: 100 },
-                                    { variant: 'text', alignment: 'center', colWidth: '10%', width: 100 },
+                                    { variant: 'text', alignment: 'left', colWidth: '8%', width: 75 },
+                                    { variant: 'text', alignment: 'center', colWidth: '9%', width: 75 },
+                                    { variant: 'text', alignment: 'center', colWidth: '17%', width: 200 },
+                                    { variant: 'text', alignment: 'center', colWidth: '9%', width: 100 },
+                                    { variant: 'text', alignment: 'center', colWidth: '9%', width: 100 },
+                                    { variant: 'text', alignment: 'center', colWidth: '9%', width: 100 },
+                                    { variant: 'text', alignment: 'center', colWidth: '9%', width: 100 },
+                                    { variant: 'rectangular', alignment: 'center', colWidth: '9%', width: 100 },
                                     { variant: 'rectangular', alignment: 'center', colWidth: '10%', width: 100 },
-                                    { variant: 'rectangular', alignment: 'right', colWidth: '10%', width: 120 }
+                                    { variant: 'rectangular', alignment: 'right', colWidth: '11%', width: 120 }
                                 ]}
                             />
                         }
