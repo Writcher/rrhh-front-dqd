@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getPreRegistros, cargarFotoPreRegistro } from "@/lib/actions/accesoControl/accesoControl.actions";
 import { PreRegistroDto } from "@/lib/types/accesoControl/pre-registro";
@@ -24,17 +24,33 @@ export default function ProximosIngresos() {
         refetchOnWindowFocus: false
     });
     const [seleccionado, setSeleccionado] = useState<PreRegistroDto | null>(null);
+    const [expanded, setExpanded] = useState(false);
 
     const items = preRegistros.data ?? [];
-    if (!preRegistros.isLoading && items.length === 0) return null;
+    const hayItems = items.length > 0;
+
+    //arranca colapsado y se despliega solo cuando la búsqueda encuentra ingresos
+    useEffect(() => {
+        if (items.length > 0) setExpanded(true);
+    }, [items.length]);
 
     return (
         <>
-            <Accordion defaultExpanded disableGutters elevation={0} className='!border-2 !border-[#ED6C02] !rounded shrink-0'>
-                <AccordionSummary expandIcon={<ExpandMoreRoundedIcon />}>
+            <Accordion
+                expanded={expanded && hayItems}
+                onChange={(_, isExpanded) => setExpanded(isExpanded && hayItems)}
+                disableGutters
+                elevation={0}
+                className='!border-2 !border-[#ED6C02] !rounded shrink-0'
+            >
+                <AccordionSummary
+                    expandIcon={hayItems ? <ExpandMoreRoundedIcon /> : undefined}
+                    className={hayItems ? undefined : '!cursor-default'}
+                    disableRipple={!hayItems}
+                >
                     <div className='flex items-center gap-2'>
                         <span className='font-medium text-gray-800'>Próximos ingresos</span>
-                        <Chip label={items.length} size='small' color='warning' className='!rounded' />
+                        <Chip label={preRegistros.isLoading ? '…' : items.length} size='small' color='warning' className='!rounded' />
                         <span className='text-xs text-gray-500'>Personal con ingreso próximo, ya cargado en el control de acceso. Subiles la foto antes de su primer día.</span>
                     </div>
                 </AccordionSummary>
