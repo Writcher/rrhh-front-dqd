@@ -26,6 +26,7 @@ import NumbersRoundedIcon from '@mui/icons-material/NumbersRounded';
 import SyncIcon from '@mui/icons-material/Sync';
 import { EmpleadoItemDto } from "@/lib/types/empleado/get-empleado";
 import EmpleadosTableRow from "./components/empleadosTableRow";
+import ProximosIngresos from "./components/proximosIngresos";
 import { useUserRole } from "@/lib/hooks/useUserRole";
 
 const ESTADO_ACCESO_OPTIONS = [
@@ -174,6 +175,8 @@ export default function Empleados() {
                     { key: 'estado_acceso', variant: 'text' }
                 ]}
             />
+            {/** Próximos ingresos (pre-registros pendientes de foto) */}
+            <ProximosIngresos />
             {/** Tabla */}
             <div className='flex flex-col lg:flex-2 flex-1 gap-2 overflow-hidden'>
                 <TableWrapper

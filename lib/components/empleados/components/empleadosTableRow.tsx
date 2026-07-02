@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useShow } from "@/lib/hooks/useShow";
 import { ModalidadValidacion } from "@/lib/types/modalidadValidacion/modalidadValidacion.entity";
 import { deactivateEmpleado, editEmpleado } from "@/lib/actions/empleado/empleado.actions";
+import { cargarFotoAcceso } from "@/lib/actions/accesoControl/accesoControl.actions";
 import { Box, Chip, TableRow } from "@mui/material";
 import { TableRowCell } from "@/lib/components/common/tables/tableRowCell";
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
@@ -13,11 +14,12 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import PersonRemoveRoundedIcon from '@mui/icons-material/PersonRemoveRounded';
 import SaveAsRoundedIcon from '@mui/icons-material/SaveAsRounded';
 import AddAPhotoRoundedIcon from '@mui/icons-material/AddAPhotoRounded';
+import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import { useEffect } from "react";
 import { ControlledSelect } from "../../common/inputs/controlledSelect";
 import { TableActionButton } from "@/lib/components/common/components/tableActionButton";
 import { useUserRole } from "@/lib/hooks/useUserRole";
-import CargarFotoDialog from "./cargarFotoDialog";
+import CargarFotoDrawer from "./cargarFotoDrawer";
 
 // Color del chip según el estado de sincronización con el control de acceso.
 const accesoColor = (estado: string): 'success' | 'warning' | 'error' | 'default' => {
@@ -46,7 +48,7 @@ export default function EmpleadosTableRow({
         }
     });
     const show = useShow();
-    const fotoDialog = useShow();
+    const fotoDrawer = useShow();
     const { isAdministrativo } = useUserRole();
     //mutacion
     const edit = useMutation({
@@ -126,31 +128,31 @@ export default function EmpleadosTableRow({
                 />
             </TableRowCell>
             <TableRowCell alignment='right' variant='buttons'>
-                {!isAdministrativo &&
-                    <Box sx={{ display: 'flex' }}>
-                        {show.show ? (
-                            <>
-                                <TableActionButton
-                                    tooltip='Guardar'
-                                    icon={<SaveAsRoundedIcon />}
-                                    color='success'
-                                    loading={edit.isPending}
-                                    disabled={edit.isPending || !isValid}
-                                    onClick={handleSubmit((data) => edit.mutate({ id_mdoalidadvalidacion: Number(data.id_modalidadvalidacion), id: empleado.id }))}
-                                    position='first'
-                                />
-                                <TableActionButton
-                                    tooltip='Cancelar'
-                                    icon={<CloseRoundedIcon />}
-                                    color='error'
-                                    loading={edit.isPending}
-                                    disabled={edit.isPending}
-                                    onClick={() => show.handleShow()}
-                                    position='last'
-                                />
-                            </>
-                        ) : (
-                            <>
+                <Box sx={{ display: 'flex' }}>
+                    {show.show ? (
+                        <>
+                            <TableActionButton
+                                tooltip='Guardar'
+                                icon={<SaveAsRoundedIcon />}
+                                color='success'
+                                loading={edit.isPending}
+                                disabled={edit.isPending || !isValid}
+                                onClick={handleSubmit((data) => edit.mutate({ id_mdoalidadvalidacion: Number(data.id_modalidadvalidacion), id: empleado.id }))}
+                                position='first'
+                            />
+                            <TableActionButton
+                                tooltip='Cancelar'
+                                icon={<CloseRoundedIcon />}
+                                color='error'
+                                loading={edit.isPending}
+                                disabled={edit.isPending}
+                                onClick={() => show.handleShow()}
+                                position='last'
+                            />
+                        </>
+                    ) : (
+                        <>
+                            {!isAdministrativo &&
                                 <TableActionButton
                                     tooltip='Editar'
                                     icon={<EditRoundedIcon />}
@@ -163,14 +165,25 @@ export default function EmpleadosTableRow({
                                     }}
                                     position='first'
                                 />
-                                <TableActionButton
-                                    tooltip={empleado.estado_acceso === 'Sincronizado' ? 'Actualizar foto' : 'Cargar foto / sincronizar'}
-                                    icon={<AddAPhotoRoundedIcon />}
-                                    color='info'
-                                    disabled={empleado.estadoempleado.toLowerCase() === 'baja' || show.show}
-                                    onClick={() => fotoDialog.handleShow()}
-                                    position='middle'
-                                />
+                            }
+                            <TableActionButton
+                                tooltip={empleado.estado_acceso === 'Sincronizado' ? 'Actualizar foto' : 'Cargar foto / Sincronizar'}
+                                icon={<AddAPhotoRoundedIcon />}
+                                color='info'
+                                disabled={empleado.estadoempleado.toLowerCase() === 'baja' || show.show}
+                                onClick={() => fotoDrawer.handleShow()}
+                                position={isAdministrativo ? 'first' : 'middle'}
+                            />
+                            <TableActionButton
+                                tooltip='Descargar foto'
+                                icon={<DownloadRoundedIcon />}
+                                color='info'
+                                disabled={empleado.estado_acceso !== 'Sincronizado' || show.show}
+                                component='a'
+                                href={`/api/foto-acceso/${empleado.id}`}
+                                position={isAdministrativo ? 'last' : 'middle'}
+                            />
+                            {!isAdministrativo &&
                                 <TableActionButton
                                     tooltip='¿Dar Baja?'
                                     confirmTooltip='Confirmar'
@@ -181,16 +194,24 @@ export default function EmpleadosTableRow({
                                     onClick={() => deactivate.mutate({ id: empleado.id })}
                                     position='last'
                                 />
-                            </>
-                        )}
-                    </Box>
-                }
+                            }
+                        </>
+                    )}
+                </Box>
             </TableRowCell>
             </TableRow>
-            <CargarFotoDialog
-                empleado={empleado}
-                open={fotoDialog.show}
-                onClose={fotoDialog.handleShow}
+            <CargarFotoDrawer
+                nombre={empleado.nombre}
+                descripcion={empleado.estado_acceso === 'Sincronizado'
+                    ? 'Se reemplazará la foto actual en el control de acceso.'
+                    : 'Se dará de alta en el control de acceso con acceso a todas las obras.'}
+                open={fotoDrawer.show}
+                onClose={fotoDrawer.handleShow}
+                guardar={(file) => cargarFotoAcceso({ id: empleado.id, file })}
+                successMessage={empleado.estado_acceso === 'Sincronizado'
+                    ? 'Foto actualizada correctamente'
+                    : 'Empleado sincronizado con control de acceso'}
+                queryKey='getEmpleados'
             />
         </>
     );
